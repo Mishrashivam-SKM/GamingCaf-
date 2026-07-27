@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { type InputHTMLAttributes } from 'react';
 
 interface PremiumInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
