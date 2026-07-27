@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OMNI COMMAND - Settings &amp; Automation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Geist+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#43474f",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-high": "#272a31",
+                    "inverse-surface": "#e1e2ec",
+                    "on-tertiary": "#502400",
+                    "primary-container": "#4d8eff",
+                    "surface-container-lowest": "#0b0e15",
+                    "on-primary-fixed": "#001a42",
+                    "surface-dim": "#10131a",
+                    "outline-variant": "#424754",
+                    "tertiary-container": "#df7412",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-low": "#191b23",
+                    "error-container": "#93000a",
+                    "surface-tint": "#adc6ff",
+                    "surface-container": "#1d2027",
+                    "on-surface": "#e1e2ec",
+                    "surface": "#10131a",
+                    "on-primary-container": "#00285d",
+                    "tertiary": "#ffb786",
+                    "on-secondary-container": "#b2b5be",
+                    "on-primary": "#002e6a",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "on-error": "#690005",
+                    "primary": "#adc6ff",
+                    "secondary-container": "#43474f",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-background": "#e1e2ec",
+                    "surface-bright": "#363941",
+                    "background": "#10131a",
+                    "surface-variant": "#32353c",
+                    "secondary": "#c3c6d0",
+                    "surface-container-highest": "#32353c",
+                    "on-secondary-fixed": "#181c23",
+                    "inverse-primary": "#005ac2",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary-fixed-dim": "#c3c6d0",
+                    "on-secondary": "#2d3138",
+                    "on-tertiary-container": "#461f00",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c2c6d6",
+                    "outline": "#8c909f",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "inverse-on-surface": "#2e3038",
+                    "secondary-fixed": "#dfe2ec",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-tertiary-fixed": "#311400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-sm": "0.5rem",
+                    "stack-lg": "2rem",
+                    "gutter": "1.5rem",
+                    "topbar-height": "64px",
+                    "container-padding": "2rem",
+                    "stack-md": "1rem",
+                    "sidebar-width": "240px",
+                    "sidebar-collapsed": "64px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Geist"],
+                    "mono-data": ["Geist Mono"],
+                    "headline-lg": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "body-sm": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "body-md": ["Geist"],
+                    "label-md": ["Geist"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b0e15;
+            color: #e1e2ec;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .toggle-switch:checked + .toggle-bg {
+            background-color: #4d8eff;
+        }
+        .toggle-switch:checked + .toggle-bg .toggle-dot {
+            transform: translateX(100%);
+        }
+        .hud-border {
+            position: relative;
+        }
+        .hud-border::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(77,142,255,0.5) 0%, rgba(77,142,255,0) 50%, rgba(77,142,255,0.5) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden">
+<!-- TopNavBar Implementation -->
+<header class="bg-surface fixed top-0 w-full h-[64px] z-50 flex justify-between items-center px-gutter w-full">
+<div class="flex items-center gap-8">
+<a class="font-headline-sm text-headline-sm font-bold text-primary" href="{{DATA:SCREEN:SCREEN_4}}">OMNI COMMAND</a>
+<div class="hidden md:flex items-center bg-surface-container rounded px-3 py-1.5 gap-2 border border-outline-variant/10">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-64 placeholder-on-surface-variant/50" placeholder="Search systems..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="text-on-surface-variant font-medium text-label-md">Live Sync</span>
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-primary font-mono-data text-label-md uppercase tracking-wider">Google Sheets Active</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-bright transition-colors p-2 rounded cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="hover:bg-surface-bright transition-colors p-2 rounded cursor-pointer active:opacity-80 text-primary font-bold">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-on-surface leading-none">Shivam</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Operator</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant/30">
+<img class="w-full h-full rounded-full object-cover" data-alt="A professional headshot of a young South Asian male administrator with short dark hair, wearing a crisp charcoal grey tactical polo shirt. He has a focused and serious expression, framed against a clean, matte dark office background with soft blue ambient rim lighting. High-end professional corporate photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqbk8AEc5gSK-Ca6zIy6bpDM_vHKSpncly1WBUzyK8ixBEOyBMJ4wj9Osv1HOlYAsh5X236OAHeXXXU605emYQsIQcK-rBvaQeRcNMvLJNZal8TKDe9pASFbrge2_4_xQgo0_Z5BULkw1kPZSpik5w3ayVZm5QUhV6PcG4pPsddzoUKV04rEu-AUxmOqC-OHqh0DD9KEzu7ff9wD6BI3bt_DAI3Fspz-ZsCKhOvrFG9EE9BTyy2Qroo92cOLg6eiXl2ttXxQXMyUw"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class="flex pt-[64px] h-screen overflow-hidden">
+<!-- SideNavBar Implementation -->
+<aside class="bg-surface-container-low border-r border-outline-variant/10 fixed left-0 top-0 h-full w-sidebar-width z-40 transition-all duration-300 flex flex-col h-full pt-[64px] pb-4">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[20px]">admin_panel_settings</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface leading-none">System Admin</h3>
+<p class="text-[10px] text-on-surface-variant uppercase">Zone Alpha</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" href="{{DATA:SCREEN:SCREEN_4}}">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" href="{{DATA:SCREEN:SCREEN_13}}">
+<span class="material-symbols-outlined">computer</span>
+<span class="font-label-md">Stations</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" href="{{DATA:SCREEN:SCREEN_7}}">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md">Users</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all duration-200" href="{{DATA:SCREEN:SCREEN_26}}">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-primary border-l-4 border-primary bg-primary/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-2 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-error-container/20 hover:text-error transition-all duration-200 rounded" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width flex-1 overflow-y-auto p-gutter bg-surface relative">
+<div class="absolute bottom-4 right-4 text-[10px] font-mono-data text-on-surface-variant/30 pointer-events-none">[SYSTEM_READY] [V_4.0.2]</div>
+<div class="max-w-6xl mx-auto space-y-stack-lg relative z-10">
+<!-- Header -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Settings &amp; Automation</h1>
+<p class="text-on-surface-variant font-body-sm mt-1">Configure global workflows, WhatsApp integrations, and access control for Zone Alpha.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-surface-container-high text-on-surface font-label-md rounded border border-outline-variant/10 hover:bg-surface-bright transition-colors">Discard</button>
+<button class="px-6 py-2 bg-primary/80 backdrop-blur-sm text-on-primary font-label-md rounded border border-primary/50 hover:bg-primary transition-all shadow-[0_0_15px_rgba(77,142,255,0.3)]">Save Config</button>
+</div>
+</div>
+<!-- Settings Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- WhatsApp Automation Panel (Bento Card) -->
+<section class="col-span-12 lg:col-span-8 bg-surface-container-low rounded-xl border-none hud-border p-6 relative shadow-lg">
+<div class="absolute top-2 right-2 text-[8px] font-mono-data text-primary/40">[MOD_WA_01]</div>
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-[#25D366]/10 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-[#25D366]">chat</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm">WhatsApp Workflows</h2>
+<p class="text-on-surface-variant text-label-md">Automated client engagement and status alerts</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full">Pro Feature</span>
+</div>
+<div class="space-y-4">
+<!-- Toggle Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg border border-outline-variant/5">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<div>
+<p class="font-body-md text-on-surface">Booking Confirmations</p>
+<p class="text-body-sm text-on-surface-variant">Send instant confirmation via WhatsApp for new PC reservations.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg border border-outline-variant/5">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<div>
+<p class="font-body-md text-on-surface">Session Reminders</p>
+<p class="text-body-sm text-on-surface-variant">Notify players 15 minutes before their session expires.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg border border-outline-variant/5">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant">cancel</span>
+<div>
+<p class="font-body-md text-on-surface">No-Show Alerts</p>
+<p class="text-body-sm text-on-surface-variant">Auto-cancel and notify after 10 minutes of inactivity.</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant/10">
+<div class="flex items-center justify-between">
+<span class="text-label-md text-on-surface-variant">API Endpoint: https://api.omni.io/v1/wa/alpha</span>
+<button class="text-primary font-label-md flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                                    Rotate Key
+                                </button>
+</div>
+</div>
+</section>
+<!-- Google Sheets Sync (Right Column) -->
+<section class="col-span-12 lg:col-span-4 space-y-gutter">
+<div class="bg-surface-container-low rounded-xl border-none hud-border p-6 relative overflow-hidden shadow-lg">
+<div class="absolute top-2 left-2 text-[8px] font-mono-data text-primary/40">[MOD_SYNC_02]</div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-[#34A853]/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[#34A853] text-[28px]">table_chart</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-[#34A853] uppercase tracking-tighter">Live Sync</span>
+<span class="text-primary font-mono-data text-label-md">v2.4.0</span>
+</div>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm">Inventory Ledger</h2>
+<p class="text-on-surface-variant text-label-md mt-1">Synced with Admin_Sheet_2024.xlsx</p>
+</div>
+<div class="bg-surface/50 rounded p-3 border border-outline-variant/10">
+<div class="flex justify-between text-body-sm mb-1">
+<span>Last Sync</span>
+<span class="text-on-surface font-medium">2 mins ago</span>
+</div>
+<div class="w-full bg-surface-variant h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%]"></div>
+</div>
+</div>
+<button class="w-full py-2 bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md rounded border border-outline-variant/10 transition-all">
+                                    Open Sheet
+                                </button>
+</div>
+<!-- Subtle background pattern -->
+<div class="absolute -right-4 -bottom-4 opacity-5">
+<span class="material-symbols-outlined text-[120px]">sync</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/10 p-6 relative">
+<div class="absolute bottom-2 right-2 text-[8px] font-mono-data text-primary/40">[CFG_RATE]</div>
+<h3 class="font-label-md text-on-surface-variant uppercase mb-4 tracking-widest">Rate Config (₹)</h3>
+<div class="space-y-4">
+<div>
+<label class="text-[10px] uppercase font-bold text-on-surface-variant block mb-1">Base Hourly Rate</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-mono-data">₹</span>
+<input class="w-full bg-surface-container border border-outline-variant/20 rounded pl-7 pr-3 py-2 text-on-surface focus:border-primary focus:ring-0 font-mono-data" type="text" value="80.00"/>
+</div>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-on-surface-variant block mb-1">Night Owl (10PM+)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-mono-data">₹</span>
+<input class="w-full bg-surface-container border border-outline-variant/20 rounded pl-7 pr-3 py-2 text-on-surface focus:border-primary focus:ring-0 font-mono-data" type="text" value="50.00"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RBAC Panel -->
+<section class="col-span-12 bg-surface-container-low rounded-xl border border-outline-variant/10 p-6 relative">
+<div class="absolute bottom-2 left-2 text-[8px] font-mono-data text-on-surface-variant/30">[SEC_RBAC_V1]</div>
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="font-headline-sm text-headline-sm">Role-Based Access Control</h2>
+<p class="text-on-surface-variant text-label-md">Define granular permissions for onsite operators</p>
+</div>
+<button class="px-4 py-2 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded font-label-md flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+                                Add Role
+                            </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-on-surface-variant border-b border-outline-variant/10">
+<th class="pb-4 font-label-md uppercase tracking-wider pl-4">Operator Name</th>
+<th class="pb-4 font-label-md uppercase tracking-wider">Access Level</th>
+<th class="pb-4 font-label-md uppercase tracking-wider">Inventory Mgmt</th>
+<th class="pb-4 font-label-md uppercase tracking-wider">Financials</th>
+<th class="pb-4 font-label-md uppercase tracking-wider pr-4">Admin Config</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="py-4 pl-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container/20 text-primary flex items-center justify-center font-bold text-label-md">AV</div>
+<div>
+<p class="font-body-md text-on-surface leading-tight">Arjun Varma</p>
+<p class="text-[10px] text-on-surface-variant">Night Lead</p>
+</div>
+</div>
+</td>
+<td class="py-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-on-surface text-[10px] rounded uppercase font-bold">Supervisor</span>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4 pr-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="py-4 pl-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container/20 text-primary flex items-center justify-center font-bold text-label-md">RS</div>
+<div>
+<p class="font-body-md text-on-surface leading-tight">Riya Sharma</p>
+<p class="text-[10px] text-on-surface-variant">Floor Manager</p>
+</div>
+</div>
+</td>
+<td class="py-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-on-surface text-[10px] rounded uppercase font-bold">Standard</span>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4 pr-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-high transition-colors">
+<td class="py-4 pl-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container/20 text-primary flex items-center justify-center font-bold text-label-md">PK</div>
+<div>
+<p class="font-body-md text-on-surface leading-tight">Pankaj Kumar</p>
+<p class="text-[10px] text-on-surface-variant">Admin Assistant</p>
+</div>
+</div>
+</td>
+<td class="py-4">
+<span class="px-2 py-0.5 bg-primary/20 text-primary text-[10px] rounded uppercase font-bold border border-primary/30">Super Admin</span>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+<td class="py-4 pr-4">
+<label class="relative inline-flex items-center cursor-pointer scale-90">
+<input checked="" class="sr-only toggle-switch" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-variant rounded-full transition-colors toggle-bg p-1">
+<div class="w-4 h-4 bg-white rounded-full transition-transform toggle-dot"></div>
+</div>
+</label>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction script -->
+<script>
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('change', (e) => {
+                const parent = e.target.closest('div');
+                if (e.target.checked) {
+                    console.log('Permission/Automation Enabled');
+                } else {
+                    console.log('Permission/Automation Disabled');
+                }
+            });
+        });
+    </script>
+</body></html>

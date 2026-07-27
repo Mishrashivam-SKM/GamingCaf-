@@ -1,0 +1,294 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OMNI COMMAND | System Initialization</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
+        
+        body {
+            background-color: #0B0D10;
+            color: #e1e2ec;
+            font-family: 'Geist', sans-serif;
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom toggle styling to match the matte aesthetic */
+        .auth-toggle-checkbox:checked + .auth-toggle-label .auth-toggle-dot {
+            transform: translateX(100%);
+            background-color: #adc6ff;
+        }
+
+        .auth-toggle-checkbox:checked + .auth-toggle-label {
+            background-color: #1d2027;
+        }
+
+        /* Input Focus Transitions */
+        .premium-input {
+            transition: all 0.2s ease-in-out;
+            background-color: #0B0D10;
+            border: 1px solid #32353c;
+        }
+
+        .premium-input:focus {
+            border-color: #adc6ff;
+            box-shadow: 0 0 0 1px #adc6ff;
+            outline: none;
+        }
+
+        /* Data Stream Background */
+        .data-stream {
+            background: repeating-linear-gradient(
+                to right,
+                transparent,
+                transparent 40px,
+                rgba(173, 198, 255, 0.02) 40px,
+                rgba(173, 198, 255, 0.02) 41px
+            );
+        }
+
+        /* Scanning Animation */
+        @keyframes scan {
+            0% { top: -20%; opacity: 0; }
+            10% { opacity: 1; }
+            40% { top: 120%; opacity: 1; }
+            50% { opacity: 0; top: 120%; }
+            100% { opacity: 0; }
+        }
+        .animate-scan {
+            animation: scan 3s linear infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#43474f",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#272a31",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary": "#502400",
+                        "primary-container": "#4d8eff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#424754",
+                        "tertiary-container": "#df7412",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-low": "#191b23",
+                        "error-container": "#93000a",
+                        "surface-tint": "#adc6ff",
+                        "surface-container": "#1d2027",
+                        "on-surface": "#e1e2ec",
+                        "surface": "#10131a",
+                        "on-primary-container": "#00285d",
+                        "tertiary": "#ffb786",
+                        "on-secondary-container": "#b2b5be",
+                        "on-primary": "#002e6a",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-error": "#690005",
+                        "primary": "#adc6ff",
+                        "secondary-container": "#43474f",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-background": "#e1e2ec",
+                        "surface-bright": "#363941",
+                        "background": "#10131a",
+                        "surface-variant": "#32353c",
+                        "secondary": "#c3c6d0",
+                        "surface-container-highest": "#32353c",
+                        "on-secondary-fixed": "#181c23",
+                        "inverse-primary": "#005ac2",
+                        "tertiary-fixed": "#ffdcc6",
+                        "secondary-fixed-dim": "#c3c6d0",
+                        "on-secondary": "#2d3138",
+                        "on-tertiary-container": "#461f00",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c2c6d6",
+                        "outline": "#8c909f",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "inverse-on-surface": "#2e3038",
+                        "secondary-fixed": "#dfe2ec",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-tertiary-fixed": "#311400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "topbar-height": "64px",
+                        "container-padding": "2rem",
+                        "stack-md": "1rem",
+                        "sidebar-width": "240px",
+                        "sidebar-collapsed": "64px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "mono-data": ["Geist Mono"],
+                        "headline-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex items-center justify-center relative">
+<!-- Atmospheric subtle noise/texture overlay -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/stardust.png');"></div>
+<!-- Data Stream Background Effect -->
+<div class="absolute inset-0 data-stream pointer-events-none z-0"></div>
+<!-- Decorative Corner Elements -->
+<div class="fixed top-0 left-0 p-8 select-none pointer-events-none z-0">
+<span class="font-mono-data text-[10px] text-primary/40 tracking-widest uppercase block">SYS_INIT // SEC_LEVEL: ALPHA</span>
+<span class="font-mono-data text-[10px] text-outline/30 tracking-widest block mt-1">TOKEN: 0x9A4F2B</span>
+</div>
+<div class="fixed top-0 right-0 p-8 select-none pointer-events-none z-0 text-right">
+<span class="font-mono-data text-[10px] text-primary/40 tracking-widest uppercase block">COORD: 34.0522° N, 118.2437° W</span>
+<span class="font-mono-data text-[10px] text-outline/30 tracking-widest block mt-1">GRID: OMEGA-7</span>
+</div>
+<main class="w-full max-w-[420px] px-6 z-10 flex flex-col items-center relative">
+<!-- Brand Identity: CRAFT Logo -->
+<div class="mb-12 flex flex-col items-center space-y-2">
+<h1 class="font-display-lg text-display-lg tracking-tighter text-on-surface drop-shadow-[0_0_15px_rgba(173,198,255,0.2)]">
+                CRAFT
+            </h1>
+<span class="font-label-md text-label-md tracking-[0.2em] text-outline uppercase">
+                Omni Command System
+            </span>
+</div>
+<!-- Login Card (Floating Module with glow) -->
+<section class="w-full bg-surface-container-low p-8 rounded-lg shadow-[0_0_40px_rgba(173,198,255,0.15)] border border-primary/20 backdrop-blur-sm">
+<!-- Auth Toggle -->
+<div class="flex items-center justify-between mb-8 pb-6 border-b border-outline-variant/10">
+<span class="font-headline-sm text-headline-sm text-primary drop-shadow-[0_0_8px_rgba(173,198,255,0.4)]" id="role-label">Admin Access</span>
+<div class="flex items-center">
+<label class="flex items-center cursor-pointer select-none" for="auth-toggle">
+<div class="relative">
+<input class="sr-only auth-toggle-checkbox" id="auth-toggle" type="checkbox" onchange="if(!this.checked) window.location.href='{{DATA:SCREEN:SCREEN_12}}'">
+<div class="auth-toggle-label block w-12 h-6 bg-surface-variant rounded-full transition-colors duration-200"></div>
+<div class="auth-toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+</div>
+</label>
+</div>
+</div>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase" for="username">Operator Identifier</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+<input class="premium-input w-full pl-10 pr-4 py-3 font-body-md text-body-md rounded text-on-surface placeholder:text-outline/50" id="username" placeholder="Enter system ID" type="text">
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase" for="password">Security Key</label>
+<a class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors" href="#">Recover?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="premium-input w-full pl-10 pr-4 py-3 font-body-md text-body-md rounded text-on-surface placeholder:text-outline/50" id="password" placeholder="••••••••" type="password">
+</div>
+</div>
+<!-- Action Button with Scanning Line -->
+<button class="relative overflow-hidden w-full bg-primary py-4 font-headline-sm text-headline-sm text-on-primary rounded font-bold hover:brightness-110 active:scale-[0.98] transition-all duration-200 shadow-[0_0_20px_rgba(173,198,255,0.3)] group" type="submit" onclick="window.location.href='{{DATA:SCREEN:SCREEN_4}}'">
+<span class="relative z-10">Initialize Session</span>
+<div class="absolute inset-0 z-0 pointer-events-none">
+<div class="absolute w-full h-[2px] bg-white/60 shadow-[0_0_8px_#fff] animate-scan left-0"></div>
+</div>
+</button>
+</form>
+<div class="mt-8 text-center">
+<p class="font-body-sm text-body-sm text-outline">
+                    System Version 4.0.2-Stable
+                </p>
+</div>
+</section>
+<!-- Footer Help -->
+<footer class="mt-12 flex flex-wrap justify-center gap-6 opacity-40 hover:opacity-100 transition-opacity duration-500">
+<a class="font-label-md text-label-md hover:text-primary transition-colors" href="#">Technical Support</a>
+<span class="text-outline">•</span>
+<a class="font-label-md text-label-md hover:text-primary transition-colors" href="#">Privacy Protocols</a>
+<span class="text-outline">•</span>
+<a class="font-label-md text-label-md hover:text-primary transition-colors" href="#">Legal Terms</a>
+</footer>
+</main>
+<!-- Subtle Background Elements -->
+<div class="fixed bottom-0 left-0 p-8 flex items-center gap-3 select-none pointer-events-none">
+<div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+<span class="font-mono-data text-mono-data text-outline/40">MASTER_NODE_ONLINE_001</span>
+</div>
+<div class="fixed bottom-0 right-0 p-8 select-none pointer-events-none">
+<span class="font-mono-data text-mono-data text-outline/40">GMT +05:30</span>
+</div>
+<script>
+        const authToggle = document.getElementById('auth-toggle');
+        const roleLabel = document.getElementById('role-label');
+        const usernameLabel = document.querySelector('label[for="username"]');
+        const passwordLabel = document.querySelector('label[for="password"]');
+
+        authToggle.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                // Staff State
+                roleLabel.textContent = 'Staff Login';
+                usernameLabel.textContent = 'Station Member ID';
+                roleLabel.classList.replace('text-primary', 'text-tertiary');
+                document.querySelector('button[type="submit"]').classList.replace('bg-primary', 'bg-tertiary');
+                document.querySelector('button[type="submit"]').classList.replace('text-on-primary', 'text-on-tertiary-container');
+                document.querySelector('button[type="submit"]').classList.replace('shadow-[0_0_20px_rgba(173,198,255,0.3)]', 'shadow-[0_0_20px_rgba(255,183,134,0.3)]');
+            } else {
+                // Admin State
+                roleLabel.textContent = 'Admin Access';
+                usernameLabel.textContent = 'Operator Identifier';
+                roleLabel.classList.replace('text-tertiary', 'text-primary');
+                document.querySelector('button[type="submit"]').classList.replace('bg-tertiary', 'bg-primary');
+                document.querySelector('button[type="submit"]').classList.replace('text-on-tertiary-container', 'text-on-primary');
+                document.querySelector('button[type="submit"]').classList.replace('shadow-[0_0_20px_rgba(255,183,134,0.3)]', 'shadow-[0_0_20px_rgba(173,198,255,0.3)]');
+            }
+        });
+
+        // Simple focus animation trigger
+        const inputs = document.querySelectorAll('.premium-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('.material-symbols-outlined').style.color = '#adc6ff';
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('.material-symbols-outlined').style.color = '';
+            });
+        });
+    </script>
+
+
+</body></html>

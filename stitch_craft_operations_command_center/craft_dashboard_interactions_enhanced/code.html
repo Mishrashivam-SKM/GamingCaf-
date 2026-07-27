@@ -1,0 +1,1008 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OMNI COMMAND - Grid Interactions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Geist+Mono:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #10131a;
+            color: #e1e2ec;
+            font-family: 'Geist', sans-serif;
+            overflow: hidden; /* Navigation and Grid handle scrolling */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(27, 31, 38, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b0e15;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #32353c;
+            border-radius: 2px;
+        }
+        .pc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .status-pulse {
+            animation: pulse-subtle 2s infinite ease-in-out;
+        }
+        
+        /* Command Center Grid Background */
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        /* Glassmorphism for Modal */
+        .modal-glass {
+            background: linear-gradient(135deg, rgba(27, 31, 38, 0.6) 0%, rgba(16, 19, 26, 0.8) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 0 40px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(77, 142, 255, 0.05);
+            position: relative;
+        }
+        
+        /* Light Leak Gradients */
+        .modal-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(173, 198, 255, 0.5), transparent);
+            z-index: 1;
+        }
+        
+        .modal-glass::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            right: 30%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(173, 198, 255, 0.3), transparent);
+            z-index: 1;
+        }
+        
+        /* Neon Glow Button */
+        .btn-neon {
+            box-shadow: 0 0 15px rgba(173, 198, 255, 0.4), inset 0 0 5px rgba(255, 255, 255, 0.2);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .btn-neon:hover {
+            box-shadow: 0 0 25px rgba(173, 198, 255, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Technical Inputs */
+        .tech-input {
+            background: rgba(11, 14, 21, 0.7);
+            border: 1px solid rgba(140, 144, 159, 0.2);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .tech-input:focus {
+            border-color: rgba(173, 198, 255, 0.5);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 8px rgba(173, 198, 255, 0.2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#43474f",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#272a31",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary": "#502400",
+                        "primary-container": "#4d8eff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-primary-fixed": "#001a42",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#424754",
+                        "tertiary-container": "#df7412",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-low": "#191b23",
+                        "error-container": "#93000a",
+                        "surface-tint": "#adc6ff",
+                        "surface-container": "#1d2027",
+                        "on-surface": "#e1e2ec",
+                        "surface": "#10131a",
+                        "on-primary-container": "#00285d",
+                        "tertiary": "#ffb786",
+                        "on-secondary-container": "#b2b5be",
+                        "on-primary": "#002e6a",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-error": "#690005",
+                        "primary": "#adc6ff",
+                        "secondary-container": "#43474f",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-background": "#e1e2ec",
+                        "surface-bright": "#363941",
+                        "background": "#10131a",
+                        "surface-variant": "#32353c",
+                        "secondary": "#c3c6d0",
+                        "surface-container-highest": "#32353c",
+                        "on-secondary-fixed": "#181c23",
+                        "inverse-primary": "#005ac2",
+                        "tertiary-fixed": "#ffdcc6",
+                        "secondary-fixed-dim": "#c3c6d0",
+                        "on-secondary": "#2d3138",
+                        "on-tertiary-container": "#461f00",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c2c6d6",
+                        "outline": "#8c909f",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "inverse-on-surface": "#2e3038",
+                        "secondary-fixed": "#dfe2ec",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-tertiary-fixed": "#311400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "topbar-height": "64px",
+                        "container-padding": "2rem",
+                        "stack-md": "1rem",
+                        "sidebar-width": "240px",
+                        "sidebar-collapsed": "64px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "mono-data": ["Geist Mono"],
+                        "headline-lg": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background bg-grid-pattern text-on-background font-body-md selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full h-[64px] z-50 flex justify-between items-center px-gutter bg-surface/90 backdrop-blur-md text-primary border-b border-outline-variant/10">
+<div class="flex items-center gap-8">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">OMNI COMMAND</span>
+<!-- KPI Pills -->
+<div class="hidden md:flex items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary text-[18px]">group</span>
+<span class="font-label-md text-label-md text-on-surface-variant">OCCUPANCY:</span>
+<span class="font-mono-data text-mono-data text-primary">42/50</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-tertiary text-[18px]">payments</span>
+<span class="font-label-md text-label-md text-on-surface-variant">COLLECTION:</span>
+<span class="font-mono-data text-mono-data text-tertiary">₹12,450</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/20">
+<span class="material-symbols-outlined text-error text-[18px]">report</span>
+<span class="font-label-md text-label-md text-on-surface-variant">ALERTS:</span>
+<span class="font-mono-data text-mono-data text-error">03</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="tech-input border-none rounded-lg pl-10 pr-4 py-2 w-64 text-body-sm font-body-sm outline-none" placeholder="Search station or user..." type="text">
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-label-md text-label-md leading-none text-on-surface">Operator</p>
+<p class="text-[10px] text-on-surface-variant font-mono-data">SID-7821</p>
+</div>
+<img class="w-9 h-9 rounded-full border border-primary/20 object-cover" data-alt="A professional headshot of a gaming cafe operator in a dark tech-focused environment, dramatic rim lighting, wearing a minimalist black uniform, cinematic quality, high contrast." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZO-sEzBaBPKHEkl3S-bEBTbnKPpQekz1b2SDKh-hoTlrS9NHnKmKP0GkvtjBWOp6xArM2lGcIs-8U6oQoSbQnikiie-zG4fSxnk4oE_gaDJvmzwcawk2mBNzlJX0_e9P2fKY_c-mGa8l-NCZoFKWMESruf4dUfwZDSobEB3lQrdul633r6dIwyVK6quPGo2Qhw4aT6JSchQ1aJ9CGkH_4y_Nefndb7lnVrKpz71VjlAFjx1ATw67hCvKWwVR-8WMpEUMVQ9UI2zo">
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<nav class="fixed left-0 top-0 h-full w-sidebar-width z-40 transition-all duration-300 bg-surface-container-low/90 backdrop-blur-md border-r border-outline-variant/10 flex flex-col pt-[64px] pb-4">
+<div class="flex-1 mt-6">
+<div class="px-4 mb-4">
+<div class="bg-surface-container-high/50 p-4 rounded-xl border border-outline-variant/10 backdrop-blur-sm">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">CURRENT ZONE</p>
+<p class="font-headline-sm text-headline-sm font-black text-on-surface uppercase tracking-tight">Zone Alpha</p>
+<p class="text-[10px] font-mono-data text-primary mt-1">SYSTEM ADMIN ONLINE</p>
+</div>
+</div>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-primary border-l-4 border-primary bg-primary/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-weight="fill">dashboard</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">computer</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Stations</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200" href="#"><span class="material-symbols-outlined">settings</span><span class="font-label-md text-label-md uppercase tracking-wider">Settings</span></a>
+</div>
+</div>
+<div class="px-4 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-error hover:bg-error/10 rounded-lg transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width pt-[64px] h-screen overflow-y-auto custom-scrollbar bg-transparent">
+<div class="p-gutter relative z-10">
+<!-- Header Section with Actions -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Station Monitor</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Real-time hardware status and session control</p>
+</div>
+<button class="btn-neon bg-primary hover:bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-label-md text-label-md uppercase flex items-center gap-2 transition-all active:scale-95" onclick="toggleModal('add-walkin-modal')">
+<span class="material-symbols-outlined text-[18px]">person_add</span>
+                    Add Walk-In Session
+                </button>
+</div>
+<!-- PC Grid -->
+<div class="pc-grid">
+<!-- PC 01 - Occupied with Hover Menu State -->
+<div class="relative group bg-surface-container/80 backdrop-blur-sm border border-primary/30 rounded-xl p-4 transition-all duration-300">
+<div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:01</div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-mono-data text-headline-sm font-black text-primary">01</span>
+<div class="flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-primary status-pulse"></span>
+<span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+</div>
+</div>
+<div class="mb-6">
+<p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Rohan_Gamer</span></p>
+<div class="flex items-center justify-between text-[11px] mb-1">
+<span class="font-mono-data">Time Left</span>
+<span class="text-primary font-bold">01:42:00</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full transition-all duration-500" style="width: 65%"></div>
+</div>
+</div>
+<!-- State A: Hover Menu Overlay -->
+<div class="absolute inset-0 z-10 glass-panel rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex flex-col p-2 gap-1.5 justify-center">
+<button class="w-full py-1.5 px-3 rounded flex items-center justify-between text-[11px] font-label-md uppercase text-on-surface hover:bg-primary/20 transition-colors">
+<span class="">Pause</span>
+<span class="material-symbols-outlined text-sm">pause</span>
+</button>
+<button class="w-full py-1.5 px-3 rounded flex items-center justify-between text-[11px] font-label-md uppercase text-on-surface hover:bg-error/20 transition-colors">
+<span class="">End Session</span>
+<span class="material-symbols-outlined text-sm text-error">stop</span>
+</button>
+<button class="w-full py-1.5 px-3 rounded flex items-center justify-between text-[11px] font-label-md uppercase text-on-surface hover:bg-tertiary/20 transition-colors">
+<span class="">Extend</span>
+<span class="material-symbols-outlined text-sm">timer</span>
+</button>
+<button class="w-full py-1.5 px-3 rounded flex items-center justify-between text-[11px] font-label-md uppercase text-on-surface hover:bg-surface-bright transition-colors">
+<span class="">Comp-Off</span>
+<span class="material-symbols-outlined text-sm">power_settings_new</span>
+</button>
+<button class="w-full py-1.5 px-3 rounded flex items-center justify-between text-[11px] font-label-md uppercase text-on-surface hover:bg-surface-bright transition-colors">
+<span class="">Transfer</span>
+<span class="material-symbols-outlined text-sm">swap_horiz</span>
+</button>
+</div>
+</div>
+<!-- Generic Grid Items (States to fill the space) -->
+<!-- PC 02-12 placeholders -->
+<script>
+                    const gridContainer = document.querySelector('.pc-grid');
+                    for (let i = 2; i <= 15; i++) {
+                        const status = i % 4 === 0 ? 'Maintenance' : (i % 3 === 0 ? 'Available' : 'Occupied');
+                        const statusColor = status === 'Available' ? 'text-green-400' : (status === 'Maintenance' ? 'text-tertiary' : 'text-primary');
+                        const dotColor = status === 'Available' ? 'bg-green-400' : (status === 'Maintenance' ? 'bg-tertiary' : 'bg-primary');
+                        const padI = i < 10 ? '0' + i : i;
+                        
+                        const html = `
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:${padI}</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">${padI}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full ${dotColor}"></span>
+                                    <span class="font-label-md text-[10px] ${statusColor} uppercase">${status}</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                ${status === 'Occupied' ? `
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_${i}</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                ` : `
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                `}
+                            </div>
+                        </div>`;
+                        gridContainer.innerHTML += html;
+                    }
+                </script>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:02</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">02</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_2</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:03</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">03</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:04</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">04</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:05</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">05</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_5</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:06</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">06</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:07</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">07</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_7</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:08</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">08</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:09</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">09</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:10</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">10</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_10</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:11</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">11</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_11</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:12</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">12</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:13</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">13</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_13</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:14</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">14</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_14</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:15</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">15</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:02</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">02</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_2</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:03</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">03</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:04</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">04</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:05</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">05</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_5</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:06</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">06</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:07</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">07</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_7</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:08</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">08</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:09</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">09</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:10</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">10</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_10</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:11</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">11</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_11</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:12</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">12</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-tertiary"></span>
+                                    <span class="font-label-md text-[10px] text-tertiary uppercase">Maintenance</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:13</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">13</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_13</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:14</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">14</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-primary"></span>
+                                    <span class="font-label-md text-[10px] text-primary uppercase">Occupied</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant mb-1">User: <span class="text-on-surface font-medium">Player_14</span></p>
+                                    <div class="flex items-center justify-between text-[11px] mb-1">
+                                        <span class="font-mono-data">Time Left</span>
+                                        <span class="text-primary font-bold">02:15:00</span>
+                                    </div>
+                                    <div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 45%"></div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                        <div class="relative group bg-surface-container/80 backdrop-blur-sm border border-outline-variant/10 rounded-xl p-4 transition-all duration-300 hover:border-primary/20">
+                            <div class="absolute top-2 right-2 text-[8px] font-mono-data text-on-surface-variant/30 uppercase tracking-widest">SEC:15</div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="font-mono-data text-headline-sm font-black text-on-surface-variant/50">15</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                                    <span class="font-label-md text-[10px] text-green-400 uppercase">Available</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                
+                                    <p class="font-body-sm text-on-surface-variant/40 italic">System Ready</p>
+                                    <p class="text-[11px] text-on-surface-variant mt-2 font-mono-data">RTX 4080 • i9 13th Gen</p>
+                                
+                            </div>
+                        </div>
+</div>
+</div>
+</main>
+<!-- State B: "Add Walk-In" Modal -->
+<div class="fixed inset-0 z-[100] items-center justify-center bg-black/60 backdrop-blur-sm transition-all flex" id="add-walkin-modal">
+<div class="w-full max-w-md modal-glass rounded-2xl overflow-hidden">
+<div class="absolute top-3 left-4 text-[10px] font-mono-data text-primary/40 uppercase tracking-widest z-10">INIT:WALK-IN_PROTOCOL</div>
+<div class="absolute bottom-3 right-4 text-[10px] font-mono-data text-primary/40 uppercase tracking-widest z-10">SYS_READY</div>
+<div class="p-6 pt-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">person_add</span>
+    Add Walk-In Session
+</h3>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" onclick="window.location.href='{{DATA:SCREEN:SCREEN_4}}'">close</button>
+</div>
+<div class="p-8 space-y-6 relative z-10">
+<!-- Phone Number -->
+<div class="space-y-2">
+<label class="block font-label-md text-[10px] text-primary/80 uppercase tracking-widest font-bold">Phone Number // ID</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-primary font-mono-data">+91</span>
+<input class="tech-input w-full rounded-lg pl-12 pr-4 py-3 text-body-md font-mono-data text-on-surface outline-none transition-all placeholder:text-on-surface-variant/30 bg-surface-container-low border-white/10" placeholder="00000 00000" type="tel">
+</div>
+</div>
+<!-- Name -->
+<div class="space-y-2">
+<label class="block font-label-md text-[10px] text-primary/80 uppercase tracking-widest font-bold">Customer Name // ALIAS</label>
+<input class="tech-input w-full rounded-lg px-4 py-3 text-body-md font-mono-data text-on-surface outline-none transition-all placeholder:text-on-surface-variant/30 bg-surface-container-low border-white/10" placeholder="Enter guest name" type="text">
+</div>
+<!-- Time & Deposit Row -->
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block font-label-md text-[10px] text-primary/80 uppercase tracking-widest font-bold">Time Slot // DURATION</label>
+<select class="tech-input w-full rounded-lg px-4 py-3 text-body-md font-mono-data text-on-surface outline-none appearance-none bg-surface-container-low border-white/10">
+<option>1 Hour</option>
+<option selected="">2 Hours</option>
+<option>5 Hours</option>
+<option>All Day</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block font-label-md text-[10px] text-primary/80 uppercase tracking-widest font-bold">Deposit // CRDT</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary font-mono-data">₹</span>
+<input class="tech-input w-full rounded-lg pl-8 pr-4 py-3 text-body-md font-mono-data text-tertiary outline-none bg-surface-container-low border-white/10" type="text" value="500">
+</div>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full btn-neon bg-primary hover:bg-primary-container text-on-primary font-bold py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2" onclick="window.location.href='{{DATA:SCREEN:SCREEN_4}}'">
+<span class="material-symbols-outlined">play_circle</span>
+                        START SESSION
+                    </button>
+<p class="text-center font-mono-data text-[10px] text-on-surface-variant/60 mt-4 tracking-wider">Automated PC Unlock • Token will be sent to WhatsApp</p>
+</div>
+</div>
+</div>
+</div>
+<!-- UI Overlay Atmospheric Layer -->
+<div class="fixed bottom-6 right-6 pointer-events-none z-50">
+<div class="bg-surface-container-high/60 backdrop-blur-xl border border-outline-variant/10 px-4 py-2 rounded-full flex items-center gap-3">
+<span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="font-mono-data text-[11px] text-on-surface">SYS_UPTIME: 14:22:05</span>
+</div>
+</div>
+<script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+        
+        // Ensure modal starts visible for "Show State B" as requested, but keep toggle functionality
+        // document.getElementById('add-walkin-modal').classList.add('flex'); // Set in HTML for initial load
+    </script>
+
+
+
+
+</body></html>

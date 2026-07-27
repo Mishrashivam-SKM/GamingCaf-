@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OMNI COMMAND | Customers Directory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Geist+Mono:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#43474f",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-high": "#272a31",
+                    "inverse-surface": "#e1e2ec",
+                    "on-tertiary": "#502400",
+                    "primary-container": "#4d8eff",
+                    "surface-container-lowest": "#0b0e15",
+                    "on-primary-fixed": "#001a42",
+                    "surface-dim": "#10131a",
+                    "outline-variant": "#424754",
+                    "tertiary-container": "#df7412",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-low": "#191b23",
+                    "error-container": "#93000a",
+                    "surface-tint": "#adc6ff",
+                    "surface-container": "#1d2027",
+                    "on-surface": "#e1e2ec",
+                    "surface": "#10131a",
+                    "on-primary-container": "#00285d",
+                    "tertiary": "#ffb786",
+                    "on-secondary-container": "#b2b5be",
+                    "on-primary": "#002e6a",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "on-error": "#690005",
+                    "primary": "#adc6ff",
+                    "secondary-container": "#43474f",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-background": "#e1e2ec",
+                    "surface-bright": "#363941",
+                    "background": "#10131a",
+                    "surface-variant": "#32353c",
+                    "secondary": "#c3c6d0",
+                    "surface-container-highest": "#32353c",
+                    "on-secondary-fixed": "#181c23",
+                    "inverse-primary": "#005ac2",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary-fixed-dim": "#c3c6d0",
+                    "on-secondary": "#2d3138",
+                    "on-tertiary-container": "#461f00",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c2c6d6",
+                    "outline": "#8c909f",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "inverse-on-surface": "#2e3038",
+                    "secondary-fixed": "#dfe2ec",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-tertiary-fixed": "#311400"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "stack-sm": "0.5rem",
+                    "stack-lg": "2rem",
+                    "gutter": "1.5rem",
+                    "topbar-height": "64px",
+                    "container-padding": "2rem",
+                    "stack-md": "1rem",
+                    "sidebar-width": "240px",
+                    "sidebar-collapsed": "64px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Geist"],
+                    "mono-data": ["Geist Mono"],
+                    "headline-lg": ["Geist"],
+                    "display-lg": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "body-sm": ["Geist"],
+                    "headline-md": ["Geist"],
+                    "body-md": ["Geist"],
+                    "label-md": ["Geist"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b0d10;
+            color: #e1e2ec;
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: center center;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #10131a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #32353c;
+            border-radius: 10px;
+        }
+        .sticky-header th {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: rgba(25, 27, 35, 0.8);
+            backdrop-filter: blur(8px);
+        }
+        .glass-panel {
+            background: rgba(29, 32, 39, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+        .neon-pulse-green {
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.2); }
+        }
+        .neon-glow-primary {
+            text-shadow: 0 0 10px rgba(173, 198, 255, 0.4);
+            box-shadow: 0 0 15px rgba(173, 198, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased"><div class="fixed inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
+<span class="font-bold text-[20vw] uppercase tracking-[0.1em] text-on-surface-variant/5 select-none">
+    CRAFT
+  </span>
+</div>
+<div class="fixed top-2 left-2 text-[10px] font-mono-data text-on-surface-variant/30 z-50 pointer-events-none">[DIR_SYS_V4]</div>
+<div class="fixed bottom-2 right-2 text-[10px] font-mono-data text-on-surface-variant/30 z-50 pointer-events-none">SYNC: OK | MS: 14</div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full h-[64px] z-50 glass-panel border-b border-outline-variant/10 flex justify-between items-center px-gutter">
+<div class="flex items-center gap-8">
+<a class="font-headline-sm text-headline-sm font-bold text-primary tracking-widest" href="{{DATA:SCREEN:SCREEN_4}}">OMNI COMMAND</a>
+<div class="hidden md:flex items-center bg-surface-container-low/50 rounded-lg px-3 py-1.5 w-80 border border-outline-variant/20">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full text-on-surface placeholder:text-on-surface-variant/50" placeholder="Search directory..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">System Status:</span>
+<div class="flex items-center gap-1.5 bg-surface-container-low/50 border border-outline-variant/10 px-2 py-1 rounded">
+<div class="w-2 h-2 rounded-full bg-green-500 neon-pulse-green"></div>
+<span class="font-label-md text-label-md text-on-surface">Active</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface leading-none">Operator</p>
+<p class="font-label-md text-[10px] text-on-surface-variant mt-1">Zone Alpha</p>
+</div>
+<img class="w-10 h-10 rounded-full border border-primary/40 object-cover" data-alt="Close up professional portrait of a tech operations manager in a dark, high-tech command center. The lighting is low and moody with subtle blue rim light highlighting their profile. The aesthetic is clean, sharp, and enterprise-focused, consistent with a premium management software interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmU_o3tR7cXv0tvQ4nl0MbCYtYVJdr90aPfDtFgU4j998SY84VN5brWEipGW9X4MwEI99XjP_LtGVeLo2F3W58H5lytm0J8obAQqniPB7cTG0FuYpifAvwW-62t8jW4JAVuYMEgI5Y3I5C4V4fpyQlsfSNrKXhIKCJI1x6OTJQzGqwHAjhuv8codSQofgH1siK1UAcq8ljk5BpCEU4ui09KbL2QkeEchYQtV9_HcDPYClAZVAxUlpna-97DVCFPVWz1ZZfcx2aF08"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-40 glass-panel border-r border-outline-variant/10 flex flex-col pt-[64px] pb-4 transition-all duration-300">
+<div class="flex-1 mt-6">
+<nav class="space-y-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_4}}">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_7}}">
+<span class="material-symbols-outlined">computer</span>
+<span class="">Stations</span>
+</a>
+<!-- ACTIVE STATE: Users -->
+<a class="flex items-center gap-3 px-4 py-3 text-primary border-l-2 border-primary bg-primary/10 font-label-md text-label-md rounded-r" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_26}}">
+<span class="material-symbols-outlined">analytics</span>
+<span class="">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_13}}"><span class="material-symbols-outlined">settings</span><span class="">Settings</span></a>
+</nav>
+</div>
+<div class="px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out font-label-md text-label-md rounded" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined">logout</span>
+<span class="">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="pl-sidebar-width pt-[64px] min-h-screen relative z-10">
+<div class="p-container-padding">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8 relative">
+<div class="absolute -top-4 -left-4 text-[10px] font-mono-data text-on-surface-variant/20 pointer-events-none">SEC_ID: 994-A</div>
+<div>
+<nav class="flex items-center gap-2 text-on-surface-variant font-mono-data text-[11px] mb-2 uppercase tracking-widest">
+<span class="">Directory</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">Customers</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-wide">Customers Directory</h1>
+<p class="font-mono-data text-body-sm text-on-surface-variant/70 mt-1 uppercase tracking-wider">Manage user profiles, loyalty tiers, and wallet balances.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 glass-panel text-on-surface hover:bg-surface-bright/50 transition-colors font-label-md text-label-md rounded uppercase tracking-wider">
+<span class="material-symbols-outlined">filter_list</span>
+                        Filter
+                    </button>
+<a class="flex items-center gap-2 px-6 py-2.5 bg-primary/20 text-primary border border-primary/50 hover:bg-primary/30 transition-colors font-label-md text-label-md rounded shadow-[0_0_15px_rgba(173,198,255,0.1)] uppercase tracking-wider" href="{{DATA:SCREEN:SCREEN_4}}">
+<span class="material-symbols-outlined">person_add</span>
+                        New Customer
+                    </a>
+</div>
+</div>
+<!-- Directory Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-8">
+<div class="glass-panel p-5 rounded relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest mb-2">Total Customers</p>
+<div class="flex items-baseline gap-2">
+<span class="font-mono-data text-headline-md text-on-surface">1,429</span>
+<span class="text-green-400 font-mono-data text-[10px] uppercase tracking-wider">+12% this month</span>
+</div>
+</div>
+<div class="glass-panel p-5 rounded relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest mb-2">Active VIPs</p>
+<div class="flex items-baseline gap-2">
+<span class="font-mono-data text-headline-md text-on-surface">184</span>
+<span class="text-primary font-mono-data text-[10px] uppercase tracking-wider">Elite Tier</span>
+</div>
+</div>
+<div class="glass-panel p-5 rounded relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest mb-2">Total Wallet Pool</p>
+<div class="flex items-baseline gap-2">
+<span class="font-mono-data text-headline-md text-on-surface">₹4,82,500</span>
+<span class="text-on-surface-variant font-mono-data text-[10px] uppercase tracking-wider">Prepaid</span>
+</div>
+</div>
+<div class="glass-panel p-5 rounded relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest mb-2">Avg. Session Time</p>
+<div class="flex items-baseline gap-2">
+<span class="font-mono-data text-headline-md text-on-surface">185m</span>
+<span class="text-on-surface-variant font-mono-data text-[10px] uppercase tracking-wider">per visit</span>
+</div>
+</div>
+</div>
+<!-- Customers Table Container -->
+<div class="glass-panel rounded-lg overflow-hidden flex flex-col max-h-[calc(100vh-340px)] relative">
+<div class="absolute top-2 right-4 text-[10px] font-mono-data text-on-surface-variant/30 pointer-events-none z-30">TBL_DATA_RDY</div>
+<div class="overflow-y-auto custom-scrollbar sticky-header">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+                                        Customer Name
+                                        <span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</div>
+</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Phone</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Visit Frequency</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20 text-right">Total Spend (₹)</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20 text-right">Wallet Balance</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Status</th>
+<th class="px-6 py-4 font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1: Arjun -->
+<tr class="hover:bg-surface-bright/30 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-primary-container/10 border border-primary/20 flex items-center justify-center text-primary font-mono-data font-bold text-sm">AV</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Arjun Verma</p>
+<p class="font-mono-data text-[10px] text-on-surface-variant/70 uppercase">Member since Jan 2024</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono-data text-mono-data text-on-surface-variant">+91 98765 43210</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="font-mono-data text-[11px] text-on-surface uppercase tracking-wider">Daily</p>
+<div class="w-24 h-[2px] bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[90%] shadow-[0_0_8px_rgba(173,198,255,0.6)]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono-data text-mono-data text-on-surface">₹42,550.00</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono-data text-mono-data text-green-400">₹2,450.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-primary/10 text-primary border border-primary/40 rounded text-[10px] font-mono-data font-bold uppercase tracking-widest neon-glow-primary">VIP GOLD</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 2: Priya -->
+<tr class="hover:bg-surface-bright/30 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-tertiary-container/10 border border-tertiary/20 flex items-center justify-center text-tertiary font-mono-data font-bold text-sm">PS</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Priya Sharma</p>
+<p class="font-mono-data text-[10px] text-on-surface-variant/70 uppercase">Member since Oct 2023</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono-data text-mono-data text-on-surface-variant">+91 87654 32109</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="font-mono-data text-[11px] text-on-surface uppercase tracking-wider">Bi-weekly</p>
+<div class="w-24 h-[2px] bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[45%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono-data text-mono-data text-on-surface">₹18,200.00</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono-data text-mono-data text-on-surface-variant">₹120.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-surface-variant/50 text-on-surface-variant border border-outline-variant/30 rounded text-[10px] font-mono-data font-bold uppercase tracking-widest">REGULAR</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 3: Rahul -->
+<tr class="hover:bg-surface-bright/30 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-error-container/10 border border-error/20 flex items-center justify-center text-error font-mono-data font-bold text-sm">RK</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Rahul Kapoor</p>
+<p class="font-mono-data text-[10px] text-on-surface-variant/70 uppercase">Member since Feb 2024</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono-data text-mono-data text-on-surface-variant">+91 76543 21098</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="font-mono-data text-[11px] text-on-surface uppercase tracking-wider">Rarely</p>
+<div class="w-24 h-[2px] bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-on-surface-variant/50 h-full w-[15%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono-data text-mono-data text-on-surface">₹4,500.00</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono-data text-mono-data text-error">₹ -15.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-surface-variant/30 text-on-surface-variant border border-outline-variant/20 rounded text-[10px] font-mono-data font-bold uppercase tracking-widest">NEWBIE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 4: Ananya -->
+<tr class="hover:bg-surface-bright/30 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-primary-container/10 border border-primary/20 flex items-center justify-center text-primary font-mono-data font-bold text-sm">AR</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Ananya Reddy</p>
+<p class="font-mono-data text-[10px] text-on-surface-variant/70 uppercase">Member since Mar 2023</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono-data text-mono-data text-on-surface-variant">+91 99887 76655</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="font-mono-data text-[11px] text-on-surface uppercase tracking-wider">Daily</p>
+<div class="w-24 h-[2px] bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%] shadow-[0_0_8px_rgba(173,198,255,0.6)]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono-data text-mono-data text-on-surface">₹64,200.00</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono-data text-mono-data text-green-400">₹8,100.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-primary/20 text-primary border border-primary/50 rounded text-[10px] font-mono-data font-bold uppercase tracking-widest neon-glow-primary">VIP ELITE</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Row 5: Vikram -->
+<tr class="hover:bg-surface-bright/30 transition-colors group cursor-pointer">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-surface-variant/30 border border-outline-variant/30 flex items-center justify-center text-on-surface-variant font-mono-data font-bold text-sm">VS</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Vikram Singh</p>
+<p class="font-mono-data text-[10px] text-on-surface-variant/70 uppercase">Member since May 2024</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono-data text-mono-data text-on-surface-variant">+91 91234 56780</td>
+<td class="px-6 py-4">
+<div class="flex flex-col gap-1">
+<p class="font-mono-data text-[11px] text-on-surface uppercase tracking-wider">Weekly</p>
+<div class="w-24 h-[2px] bg-surface-variant rounded-full overflow-hidden">
+<div class="bg-secondary/70 h-full w-[60%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono-data text-mono-data text-on-surface">₹12,400.00</td>
+<td class="px-6 py-4 text-right">
+<p class="font-mono-data text-mono-data text-on-surface-variant">₹450.00</p>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-surface-variant/50 text-on-surface-variant border border-outline-variant/30 rounded text-[10px] font-mono-data font-bold uppercase tracking-widest">REGULAR</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<!-- Dummy padding for scroll feel -->
+<tr class="border-none">
+<td class="h-24" colspan="7"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination/Footer -->
+<div class="mt-auto border-t border-outline-variant/20 bg-surface-container/50 backdrop-blur-sm px-6 py-3 flex justify-between items-center relative z-20">
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest">Showing 1 to 5 of 1,429 customers</p>
+<div class="flex items-center gap-2">
+<button class="p-1 hover:bg-surface-bright/50 rounded text-on-surface-variant disabled:opacity-30 transition-colors" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<div class="flex gap-1 font-mono-data text-[11px]">
+<button class="w-6 h-6 flex items-center justify-center bg-primary/20 text-primary border border-primary/30 rounded">1</button>
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-bright/50 text-on-surface-variant rounded transition-colors">2</button>
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-bright/50 text-on-surface-variant rounded transition-colors">3</button>
+<span class="w-6 h-6 flex items-center justify-center text-on-surface-variant">...</span>
+<button class="w-6 h-6 flex items-center justify-center hover:bg-surface-bright/50 text-on-surface-variant rounded transition-colors">286</button>
+</div>
+<button class="p-1 hover:bg-surface-bright/50 rounded text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Details Panel -->
+<div class="fixed right-0 top-[64px] h-[calc(100vh-64px)] w-80 glass-panel border-l border-outline-variant/20 translate-x-full transition-transform duration-300 z-30 p-6" id="details-panel">
+<div class="absolute top-2 left-2 text-[10px] font-mono-data text-on-surface-variant/30 pointer-events-none">PNL_ACTV</div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-mono-data text-sm text-on-surface uppercase tracking-widest">Customer Profile</h3>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors" onclick="togglePanel()">close</button>
+</div>
+<div class="flex flex-col items-center mb-8">
+<div class="w-20 h-20 rounded bg-primary-container/10 border border-primary/30 flex items-center justify-center text-primary font-mono-data font-bold text-2xl mb-4 shadow-[inset_0_0_15px_rgba(173,198,255,0.1)]">AV</div>
+<h2 class="font-headline-md text-headline-md text-on-surface text-center tracking-wide">Arjun Verma</h2>
+<p class="font-mono-data text-[11px] text-on-surface-variant uppercase tracking-widest mt-1">ID: #99281</p>
+</div>
+<div class="space-y-6">
+<div>
+<p class="font-mono-data text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Recent Session</p>
+<div class="bg-surface/50 border border-outline-variant/10 p-3 rounded">
+<p class="font-mono-data text-[13px] text-on-surface">PC-24 (Gaming Zone)</p>
+<p class="font-mono-data text-[11px] text-primary mt-1">2h 15m remaining</p>
+</div>
+</div>
+<div>
+<p class="font-mono-data text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Wallet Actions</p>
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-primary/10 text-primary py-2 rounded font-mono-data text-[11px] uppercase tracking-widest border border-primary/30 hover:bg-primary/20 transition-colors">Add Cash</button>
+<button class="bg-surface-variant/30 text-on-surface py-2 rounded font-mono-data text-[11px] uppercase tracking-widest border border-outline-variant/20 hover:bg-surface-variant/50 transition-colors">History</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                const panel = document.getElementById('details-panel');
+                panel.classList.remove('translate-x-full');
+            });
+        });
+
+        function togglePanel() {
+            const panel = document.getElementById('details-panel');
+            panel.classList.add('translate-x-full');
+        }
+    </script>
+</body></html>

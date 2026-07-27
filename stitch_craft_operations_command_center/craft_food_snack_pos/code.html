@@ -1,0 +1,353 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>CRAFT | Add Snacks &amp; Drinks</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&amp;family=Geist:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-tertiary": "#502400",
+                        "surface-variant": "#32353c",
+                        "on-secondary-fixed-variant": "#43474f",
+                        "tertiary-container": "#df7412",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-background": "#e1e2ec",
+                        "outline": "#8c909f",
+                        "surface-container-lowest": "#0b0e15",
+                        "surface-container-highest": "#32353c",
+                        "surface": "#10131a",
+                        "on-secondary-container": "#b2b5be",
+                        "on-primary-fixed": "#001a42",
+                        "surface-container-low": "#191b23",
+                        "surface-bright": "#363941",
+                        "secondary-fixed-dim": "#c3c6d0",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-primary": "#002e6a",
+                        "inverse-surface": "#e1e2ec",
+                        "inverse-primary": "#005ac2",
+                        "on-tertiary-fixed": "#311400",
+                        "surface-tint": "#adc6ff",
+                        "primary-fixed-dim": "#adc6ff",
+                        "error-container": "#93000a",
+                        "secondary-container": "#43474f",
+                        "primary": "#adc6ff",
+                        "secondary-fixed": "#dfe2ec",
+                        "surface-dim": "#10131a",
+                        "secondary": "#c3c6d0",
+                        "on-error": "#690005",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-high": "#272a31",
+                        "primary-container": "#4d8eff",
+                        "on-secondary-fixed": "#181c23",
+                        "on-secondary": "#2d3138",
+                        "on-tertiary-container": "#461f00",
+                        "inverse-on-surface": "#2e3038",
+                        "tertiary-fixed": "#ffdcc6",
+                        "on-primary-container": "#00285d",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "background": "#10131a",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#424754",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#ffb786",
+                        "on-surface": "#e1e2ec",
+                        "surface-container": "#1d2027"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "container-padding": "2rem",
+                        "gutter": "1.5rem",
+                        "topbar-height": "64px",
+                        "stack-lg": "2rem",
+                        "stack-md": "1rem",
+                        "sidebar-width": "240px",
+                        "sidebar-collapsed": "64px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Geist"],
+                        "label-md": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "mono-data": ["Geist Mono"],
+                        "headline-md": ["Geist"],
+                        "display-lg": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0B0D10; /* Canvas */
+        }
+        .modal-overlay {
+            background-color: rgba(11, 13, 16, 0.8);
+            backdrop-filter: blur(4px);
+        }
+        .bg-panel {
+            background-color: #1B1F26; /* Level 2 Popovers */
+        }
+        .bg-card {
+            background-color: #15181D; /* Level 1 Cards */
+        }
+        .border-subtle {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .hover-subtle:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+        /* Custom scrollbar for POS list */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #32353c;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #424754;
+        }
+    </style>
+</head>
+<body class="text-on-surface font-body-md h-screen w-screen overflow-hidden flex items-center justify-center bg-background">
+<!-- Mock Background of Dashboard -->
+<div class="absolute inset-0 grid grid-cols-12 gap-gutter p-gutter opacity-30 pointer-events-none">
+<div class="col-span-12 h-topbar-height bg-surface-container-low border-b border-subtle"></div>
+<div class="col-span-2 h-full bg-surface-container-low border-r border-subtle"></div>
+<div class="col-span-10 grid grid-cols-4 gap-gutter h-full pb-gutter">
+<div class="bg-surface-container-low rounded border-subtle h-64"></div>
+<div class="bg-surface-container-low rounded border-subtle h-64"></div>
+<div class="bg-surface-container-low rounded border-subtle h-64"></div>
+<div class="bg-surface-container-low rounded border-subtle h-64"></div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div class="absolute inset-0 modal-overlay z-40 flex items-center justify-center p-container-padding">
+<!-- POS Modal Container -->
+<div class="bg-panel w-full max-w-6xl h-[80vh] rounded-xl border-subtle shadow-2xl flex flex-col overflow-hidden relative z-50">
+<!-- Modal Header -->
+<header class="h-[72px] shrink-0 border-b border-subtle flex items-center justify-between px-6 bg-surface-container-low">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_shopping_cart</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Add Snacks &amp; Drinks</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Station</span>
+<span class="px-2 py-0.5 rounded text-xs font-mono-data bg-primary/20 text-primary border border-primary/30">PC-07</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-2">Current Session: 02:14:30 remaining</span>
+</div>
+</div>
+</div>
+<button aria-label="Close Modal" class="w-10 h-10 rounded hover-subtle flex items-center justify-center text-on-surface-variant transition-colors" onclick="window.location.href='{{DATA:SCREEN:SCREEN_4}}'">
+<span class="material-symbols-outlined">close</span>
+</button>
+</header>
+<!-- Modal Body -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Main Content Area (Categories & Items) -->
+<div class="flex-1 flex flex-col border-r border-subtle">
+<!-- Categories Tabs -->
+<div class="h-16 shrink-0 border-b border-subtle px-6 flex items-center gap-2 overflow-x-auto no-scrollbar">
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover-subtle transition-colors flex items-center gap-2 border border-transparent">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+                            Chinese Cuisine
+                        </button>
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover-subtle transition-colors flex items-center gap-2 border border-transparent">
+<span class="material-symbols-outlined text-[20px]">local_pizza</span>
+                            Pizzas
+                        </button>
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover-subtle transition-colors flex items-center gap-2 border border-transparent">
+<span class="material-symbols-outlined text-[20px]">lunch_dining</span>
+                            Burgers
+                        </button>
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm text-primary bg-primary/10 border border-primary/20 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                            Energy Drinks
+                        </button>
+<button class="px-4 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover-subtle transition-colors flex items-center gap-2 border border-transparent">
+<span class="material-symbols-outlined text-[20px]">local_cafe</span>
+                            Hot Beverages
+                        </button>
+</div>
+<!-- Items Grid -->
+<div class="flex-1 overflow-y-auto p-6 bg-background">
+<!-- Search/Filter Bar -->
+<div class="mb-6 flex gap-4">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-panel border-subtle text-on-surface font-body-sm rounded-lg pl-10 pr-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface-variant/50" placeholder="Search Energy Drinks..." type="text">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<!-- Item Card: Red Bull -->
+<div class="bg-card rounded-lg border-subtle p-4 flex flex-col justify-between hover-subtle transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Red Bull</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">250ml Can</p>
+</div>
+<div class="w-12 h-12 bg-surface-container-low rounded border-subtle flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A detailed digital rendering of a classic silver and blue energy drink can against a dark matte background. The lighting is studio-quality, highlighting the metallic texture of the can without heavy reflections. The scene sits within a premium, high-tech cafe management interface aesthetic, featuring deep blacks and subtle electric blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtXuOqjjcBNos9grhaXlGU-FgNgVSKU90NJtnaEHZs33sTpjvdw7oMgQxxsmD6NyevEKbYVb4WeQ5sgpUA-dxZ58N_AcfILizMBYE5KuVp0NVkQExH-iOtcMmL4GIvoKvC24MgdbWKo9Jc0jfqIQkcGFBvIX0YRxoTX5_MTnpBFKj53QT61X5g1LRyK63HZv6kdG0RANzjcSj0I5rnS728ERnYpVFf_qcDUpbz2nA8roAOAQwrU5Pgco8JACAIoVviFHAiXr09sFc">
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-mono-data text-body-lg text-on-surface">₹120</span>
+<button class="w-8 h-8 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface border-subtle flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Item Card: Monster -->
+<div class="bg-card rounded-lg border-subtle p-4 flex flex-col justify-between hover-subtle transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Monster</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">500ml Can</p>
+</div>
+<div class="w-12 h-12 bg-surface-container-low rounded border-subtle flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A highly detailed 3D render of a black energy drink can featuring a striking green claw mark logo, set against a sophisticated dark matte environment. The lighting is dramatic yet controlled, perfectly suited for a premium command center UI. The color palette relies on deep charcoal tones with subtle neon green highlights, maintaining a professional and clean look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8pPvldR2dZ_cTFCnwzmsk7dw9BrvEiRDMuTv-_0RYBLbtgR30clUwuEqR-R3P3cXLLThHeWg4kZbUahc9YR8Fz-0eeEL-Cz_NSTOL9Gck1qTZziMXF9pRAtNFevYyYvOHt4x26BTDVoiDHIIxcrK-oTpA2IWkbexinIUJu90veaNxSigZcRBvYLErOrrPyrL8DIpp8biyFmWEZtmnxyyKVHL-82w5xELCvyy8ygsVoqdRZ653q2v2da9Jdgasgf-2joP5X3pA5xU">
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-mono-data text-body-lg text-on-surface">₹110</span>
+<button class="w-8 h-8 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface border-subtle flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+<!-- Item Card: Sting -->
+<div class="bg-card rounded-lg border-subtle p-4 flex flex-col justify-between hover-subtle transition-colors group cursor-pointer border-primary/30 bg-primary/5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Sting</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">250ml PET</p>
+</div>
+<div class="w-12 h-12 bg-surface-container-low rounded border-subtle flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A sleek, professional visualization of a bright red energy drink plastic bottle standing in a modern, dark-themed UI context. Soft, diffuse lighting accentuates the liquid's color without introducing glossy glare. The surrounding environment is a deep, matte black #0B0D10, fitting a high-end gaming cafe management system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ7QmrOI8rJybqXz3ZLyD0gbl1rTAt28q3lS-Bgex_3hvLZlz-_IAKQMdXrfDBhvo91GRUdjHLPX_P9gpAf0MeL5L3cFRgQEu4rojbSNY_kD_mPShvoXou5nzdFcbnkHJMoHrCAxtP7LCwGGYYScc0Vei7yS5fHlwa9O700sZc1vCaPZuUr8P05Fk0WoXiX8DBhNi1z708k-Ma52S4QYG3EPx-aS7yYp2aBRMjMpQhty7Mix2l5omtOh_WYqomttNy6WukV4zDcLk">
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-mono-data text-body-lg text-on-surface">₹50</span>
+<div class="flex items-center gap-2 bg-surface-container-low rounded border-subtle">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-mono-data text-body-sm w-4 text-center">2</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item Card: Gatorade Blue -->
+<div class="bg-card rounded-lg border-subtle p-4 flex flex-col justify-between hover-subtle transition-colors group cursor-pointer opacity-50 pointer-events-none">
+<div class="flex justify-between items-start mb-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Gatorade</h3>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label-md bg-error/10 text-error border border-error/20 uppercase tracking-widest">Out of Stock</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">500ml Blue Bolt</p>
+</div>
+<div class="w-12 h-12 bg-surface-container-low rounded border-subtle flex items-center justify-center overflow-hidden grayscale">
+<span class="material-symbols-outlined text-outline">water_drop</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-mono-data text-body-lg text-on-surface-variant">₹80</span>
+<button class="w-8 h-8 rounded bg-surface-container-low text-outline border-subtle flex items-center justify-center cursor-not-allowed">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar: Quick Add Bill -->
+<div class="w-[320px] shrink-0 bg-surface-container-low flex flex-col">
+<div class="h-16 shrink-0 border-b border-subtle px-6 flex items-center justify-between bg-panel">
+<h3 class="font-label-md text-label-md text-on-surface uppercase tracking-wider">Current Order</h3>
+<span class="px-2 py-1 rounded bg-surface border-subtle font-mono-data text-xs text-on-surface-variant">2 Items</span>
+</div>
+<!-- Bill Items -->
+<div class="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+<!-- Bill Item 1 -->
+<div class="bg-card rounded p-3 border-subtle group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Sting (250ml)</span>
+<button class="text-outline-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">2 × ₹50</span>
+</div>
+<span class="font-mono-data text-body-sm text-on-surface font-medium">₹100</span>
+</div>
+</div>
+</div>
+<!-- Bill Summary & Actions -->
+<div class="p-6 bg-panel border-t border-subtle mt-auto">
+<div class="flex justify-between items-center mb-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Subtotal</span>
+<span class="font-mono-data text-body-sm text-on-surface">₹100</span>
+</div>
+<div class="flex justify-between items-center mb-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tax (5%)</span>
+<span class="font-mono-data text-body-sm text-on-surface">₹5</span>
+</div>
+<div class="flex justify-between items-end mb-6 pt-4 border-t border-subtle">
+<span class="font-headline-sm text-headline-sm text-on-surface">Total</span>
+<span class="font-mono-data text-headline-md text-primary font-bold">₹105</span>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full py-3 rounded bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider hover:bg-primary-container transition-colors flex justify-center items-center gap-2" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+<span class="material-symbols-outlined text-[18px]">add_task</span>
+                                Append to Session
+                            </button>
+<button class="w-full py-2.5 rounded bg-transparent border-subtle text-on-surface font-label-md text-label-md uppercase tracking-wider hover:bg-surface-bright transition-colors" onclick="window.location.href='{{DATA:SCREEN:SCREEN_10}}'">
+                                Pay Now (Cash/Card)
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+</body></html>

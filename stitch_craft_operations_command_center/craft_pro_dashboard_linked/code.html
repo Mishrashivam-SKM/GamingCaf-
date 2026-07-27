@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OMNI COMMAND | Live Grid Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Geist', sans-serif;
+            background-color: #0B0D10;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 46, 106, 0.15), transparent 35%), 
+                radial-gradient(circle at 85% 30%, rgba(0, 46, 106, 0.1), transparent 35%);
+            color: #e1e2ec;
+            margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.15;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0D10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1B1F26;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3B82F6;
+        }
+
+        .matte-card {
+            background: rgba(21, 24, 29, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.15); /* Light leak effect */
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+        .matte-card:hover {
+            background: rgba(27, 31, 38, 0.6);
+            border-top: 1px solid rgba(173, 198, 255, 0.3);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .status-ring {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .status-green { background-color: #22c55e; animation: pulse-green 2s infinite; }
+        .status-red { background-color: #ef4444; animation: pulse-red 2s infinite; }
+        .status-orange { background-color: #f97316; animation: pulse-orange 2s infinite; }
+
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0); } 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); } }
+
+        .glow-primary {
+            box-shadow: 0 0 8px #adc6ff;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-fixed-variant": "#43474f",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-high": "#272a31",
+                      "inverse-surface": "#e1e2ec",
+                      "on-tertiary": "#502400",
+                      "primary-container": "#4d8eff",
+                      "surface-container-lowest": "rgba(11, 14, 21, 0)", /* Made transparent for radial gradients */
+                      "on-primary-fixed": "#001a42",
+                      "surface-dim": "#10131a",
+                      "outline-variant": "#424754",
+                      "tertiary-container": "#df7412",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-container-low": "rgba(25, 27, 35, 0.7)", /* Adjusted for glass */
+                      "error-container": "#93000a",
+                      "surface-tint": "#adc6ff",
+                      "surface-container": "#1d2027",
+                      "on-surface": "#e1e2ec",
+                      "surface": "rgba(16, 19, 26, 0.8)", /* Adjusted for glass */
+                      "on-primary-container": "#00285d",
+                      "tertiary": "#ffb786",
+                      "on-secondary-container": "#b2b5be",
+                      "on-primary": "#002e6a",
+                      "on-tertiary-fixed-variant": "#723600",
+                      "on-error": "#690005",
+                      "primary": "#adc6ff",
+                      "secondary-container": "#43474f",
+                      "on-primary-fixed-variant": "#004395",
+                      "on-background": "#e1e2ec",
+                      "surface-bright": "#363941",
+                      "background": "#10131a",
+                      "surface-variant": "#32353c",
+                      "secondary": "#c3c6d0",
+                      "surface-container-highest": "#32353c",
+                      "on-secondary-fixed": "#181c23",
+                      "inverse-primary": "#005ac2",
+                      "tertiary-fixed": "#ffdcc6",
+                      "secondary-fixed-dim": "#c3c6d0",
+                      "on-secondary": "#2d3138",
+                      "on-tertiary-container": "#461f00",
+                      "error": "#ffb4ab",
+                      "on-surface-variant": "#c2c6d6",
+                      "outline": "#8c909f",
+                      "tertiary-fixed-dim": "#ffb786",
+                      "inverse-on-surface": "#2e3038",
+                      "secondary-fixed": "#dfe2ec",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-tertiary-fixed": "#311400"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-sm": "0.5rem",
+                      "stack-lg": "2rem",
+                      "gutter": "1.5rem",
+                      "topbar-height": "64px",
+                      "container-padding": "2rem",
+                      "stack-md": "1rem",
+                      "sidebar-width": "240px",
+                      "sidebar-collapsed": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Geist"],
+                      "mono-data": ["Geist Mono"],
+                      "headline-lg": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "headline-sm": ["Geist"],
+                      "body-sm": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "body-md": ["Geist"],
+                      "label-md": ["Geist"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="text-on-surface">
+<div class="grid-bg"><div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+<span class="font-black text-[20vw] uppercase tracking-tighter opacity-[0.03] select-none">
+        CRAFT
+    </span>
+</div></div>
+<div class="scanlines"></div>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 w-full h-[64px] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/10 flex justify-between items-center px-gutter w-full">
+<div class="flex items-center gap-8">
+<a class="font-headline-sm text-headline-sm font-bold text-primary" href="{{DATA:SCREEN:SCREEN_4}}">OMNI COMMAND</a>
+<!-- KPI Pills Cluster -->
+<div class="hidden lg:flex items-center gap-3">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high/50 border border-outline-variant/10 backdrop-blur-sm">
+<span class="text-label-md font-label-md text-on-surface-variant">Active PCs</span>
+<span class="text-label-md font-label-md text-primary">12/20</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high/50 border border-outline-variant/10 backdrop-blur-sm">
+<span class="text-label-md font-label-md text-on-surface-variant">Available</span>
+<span class="text-label-md font-label-md text-tertiary">8</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high/50 border border-outline-variant/10 backdrop-blur-sm">
+<span class="text-label-md font-label-md text-on-surface-variant">Today's Revenue</span>
+<span class="text-label-md font-label-md text-primary">₹8,450</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high/50 border border-outline-variant/10 backdrop-blur-sm">
+<span class="text-label-md font-label-md text-on-surface-variant">Pending</span>
+<span class="text-label-md font-label-md text-error">₹1,200</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">settings</span>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-outline-variant/20">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Operator</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Zone Alpha</p>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest border border-outline-variant/20">
+<img class="w-full h-full object-cover" data-alt="A high-contrast profile portrait of a professional e-sports arena manager in a dark, minimalist setting. The operator wears a sleek dark uniform with subtle blue accents. The lighting is low-key, emphasizing a focused, tech-driven atmosphere consistent with a premium command center UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXBD8uYxJOyBHXKyS5WA2MVZCRJKgmFpczZ5ZYdNqdUZq4xZZSjlJtEmA_oKJNSovlYsmJpPezNTgM8Z52IhRedA7ua0cFnBIC8hnpOh9bqs3f1bez2wTEZSYvpbTGvYvvtDMQuA2UsJxDKBlt2r7gq12XI_qPhWn6wy_W7WOjH8g8Ru4anYbB89PU4t4W2lBohnA4YstaYPdIIiH8iQ3eYXqiqk7wnlERFaFlhIsjiAT2nj5VaI5Z7IpGcJeVsELXphq8LRpFEb8"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width z-40 transition-all duration-300 bg-surface-container-low/80 backdrop-blur-xl border-r border-outline-variant/10 flex flex-col h-full pt-[64px] pb-4">
+<div class="px-6 py-8 flex flex-col items-center border-b border-outline-variant/5">
+<div class="w-12 h-12 mb-3 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">terminal</span>
+</div>
+<h3 class="font-headline-sm text-[16px] font-black text-on-surface">System Admin</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Zone Alpha</p>
+</div>
+<nav class="flex-1 mt-4 overflow-y-auto px-2 space-y-1 relative z-10">
+<a class="flex items-center gap-3 px-4 py-3 text-primary border-l-4 border-primary bg-primary/5 transition-all duration-200 ease-in-out backdrop-blur-sm" href="{{DATA:SCREEN:SCREEN_4}}">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_4}}">
+<span class="material-symbols-outlined">computer</span>
+<span class="font-label-md text-label-md">Stations</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_7}}">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_5}}">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_26}}">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_13}}">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-2 pt-4 border-t border-outline-variant/5 relative z-10">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high/50 hover:text-on-surface transition-all duration-200 ease-in-out rounded-r-lg" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-sidebar-width pt-topbar-height min-h-screen bg-transparent relative z-10">
+<div class="p-gutter">
+<div class="flex justify-between items-end mb-8 relative z-20">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Station Monitor</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Live overview of all terminal nodes across Zone Alpha.</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/10 px-4 py-2 rounded">
+<div class="status-ring status-green"></div> Available
+                    </div>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/10 px-4 py-2 rounded">
+<div class="status-ring status-red"></div> Occupied
+                    </div>
+<div class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/10 px-4 py-2 rounded">
+<div class="status-ring status-orange"></div> Reserved
+                    </div>
+</div>
+</div>
+<!-- PC Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 relative z-20">
+<!-- PC Card Logic: JS used for loop, but here manually drafted for control -->
+<!-- PC #01 (Occupied) -->
+<div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-01</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Arjun Sharma</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                            Valorant
+                        </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:42:15</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 65%"></div>
+</div>
+</div>
+</div>
+<!-- PC #02 (Available) -->
+<div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-02</span>
+<div class="status-ring status-green"></div>
+</div>
+<div class="mb-4 h-[52px] flex items-center">
+<p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div>
+<!-- PC #03 (Occupied) -->
+<div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-03</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Rohan Verma</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                            CS2
+                        </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">00:15:30</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 88%"></div>
+</div>
+</div>
+</div>
+<!-- PC #04 (Reserved) -->
+<div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-04</span>
+<div class="status-ring status-orange"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Priya Das</p>
+<p class="font-label-md text-label-md text-tertiary mt-1">Check-in at 16:30</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div>
+<!-- PC #05 (Occupied) -->
+<div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-05</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Kabir Malhotra</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                            Dota 2
+                        </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">02:55:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 30%"></div>
+</div>
+</div>
+</div>
+<!-- PC #06 - #20 generated dynamically for visual fullness -->
+<script>
+                    const names = ["Ishita Kaur", "Vikram Singh", "Ananya Reddy", "Aditya Roy", "Sanya Gupta", "Rahul Bose", "Zoya Khan", "Manish Iyer", "Tanvi Joshi", "Nikhil Pal", "Deepika Sen", "Sameer Pillai", "Aarav Jain", "Neha Bhat", "Karan Mehra"];
+                    const games = ["Valorant", "CS2", "League of Legends", "Apex Legends", "GTA V"];
+                    const gridContainer = document.querySelector('.grid');
+                    
+                    for(let i = 6; i <= 20; i++) {
+                        const isOccupied = Math.random() > 0.4;
+                        const statusClass = isOccupied ? 'status-red' : (Math.random() > 0.7 ? 'status-orange' : 'status-green');
+                        const progress = Math.floor(Math.random() * 90) + 5;
+                        const nodeName = names[i-6] || "Guest Node";
+                        const gameName = games[Math.floor(Math.random() * games.length)];
+                        
+                        const card = document.createElement('div');
+                        card.className = "matte-card p-5 rounded-lg border border-outline-variant/5";
+                        card.innerHTML = `
+                            <div class="flex justify-between items-start mb-6">
+                                <span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-${i.toString().padStart(2, '0')}</span>
+                                <div class="status-ring ${statusClass}"></div>
+                            </div>
+                            ${statusClass === 'status-red' ? `
+                            <div class="mb-4">
+                                <p class="font-headline-sm text-[18px] text-on-surface">${nodeName}</p>
+                                <p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    ${gameName}
+                                </p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+                                    <span>Time Remaining</span>
+                                    <span class="text-primary">01:${Math.floor(Math.random()*60).toString().padStart(2, '0')}:00</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+                                    <div class="h-full bg-primary glow-primary" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                            ` : (statusClass === 'status-orange' ? `
+                            <div class="mb-4">
+                                <p class="font-headline-sm text-[18px] text-on-surface">${nodeName}</p>
+                                <p class="font-label-md text-label-md text-tertiary mt-1">Pending Check-in</p>
+                            </div>
+                            <div class="space-y-3 opacity-20">
+                                <div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+                                    <span>Time Remaining</span>
+                                    <span>--:--:--</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+                            </div>
+                            ` : `
+                            <div class="mb-4 h-[52px] flex items-center">
+                                <p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+                            </div>
+                            <div class="space-y-3 opacity-20">
+                                <div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+                                    <span>Time Remaining</span>
+                                    <span>--:--:--</span>
+                                </div>
+                                <div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+                            </div>
+                            `)}
+                        `;
+                        gridContainer.appendChild(card);
+                    }
+                </script><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-06</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Ishita Kaur</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    League of Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:17:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 11%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-07</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Vikram Singh</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    Apex Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:55:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 37%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-08</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Ananya Reddy</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    Apex Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:37:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 41%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-09</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Aditya Roy</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    CS2
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:21:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 52%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-10</span>
+<div class="status-ring status-orange"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Sanya Gupta</p>
+<p class="font-label-md text-label-md text-tertiary mt-1">Pending Check-in</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-11</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Rahul Bose</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    GTA V
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:37:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 22%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-12</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Zoya Khan</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    Apex Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:26:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 90%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-13</span>
+<div class="status-ring status-green"></div>
+</div>
+<div class="mb-4 h-[52px] flex items-center">
+<p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-14</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Tanvi Joshi</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    League of Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:52:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 60%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-15</span>
+<div class="status-ring status-green"></div>
+</div>
+<div class="mb-4 h-[52px] flex items-center">
+<p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-16</span>
+<div class="status-ring status-green"></div>
+</div>
+<div class="mb-4 h-[52px] flex items-center">
+<p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-17</span>
+<div class="status-ring status-green"></div>
+</div>
+<div class="mb-4 h-[52px] flex items-center">
+<p class="font-label-md text-label-md text-on-surface-variant italic">Terminal Ready</p>
+</div>
+<div class="space-y-3 opacity-20">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="">--:--:--</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full"></div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-18</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Aarav Jain</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    CS2
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:52:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 54%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-19</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Neha Bhat</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    CS2
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:21:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 8%"></div>
+</div>
+</div>
+</div><div class="matte-card p-5 rounded-lg border border-outline-variant/5">
+<div class="flex justify-between items-start mb-6">
+<span class="font-mono-data text-mono-data text-on-surface-variant uppercase tracking-tighter">Node-20</span>
+<div class="status-ring status-red"></div>
+</div>
+<div class="mb-4">
+<p class="font-headline-sm text-[18px] text-on-surface">Karan Mehra</p>
+<p class="font-label-md text-label-md text-primary mt-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">sports_esports</span>
+                                    League of Legends
+                                </p>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-label-md font-label-md text-on-surface-variant">
+<span class="">Time Remaining</span>
+<span class="text-primary">01:52:00</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary glow-primary" style="width: 13%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple PC Card interaction simulation
+        document.querySelectorAll('.matte-card').forEach(card => {
+            card.addEventListener('click', () => {
+                window.location.href = '{{DATA:SCREEN:SCREEN_10}}';
+            });
+        });
+
+        // Search highlight logic for future expansion
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '/' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                console.log('Quick Search Focus');
+            }
+        });
+    </script>
+</body></html>
