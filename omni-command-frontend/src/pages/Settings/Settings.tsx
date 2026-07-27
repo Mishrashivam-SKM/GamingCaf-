@@ -1,8 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MatteCard } from '../../components/common/MatteCard';
 import { PremiumInput } from '../../components/common/PremiumInput';
+import { useSettings, useUpdateSettings } from '../../hooks/queries/useSettings';
+import { toast } from 'sonner';
 
 export const Settings: React.FC = () => {
+  const { data: settings, isLoading } = useSettings();
+  const { mutate: updateSettings, isLoading: isSaving } = useUpdateSettings();
+
+  const [formState, setFormState] = useState<{
+    theme: 'light' | 'dark' | 'system';
+    currency: string;
+    taxRate: number;
+    storeName: string;
+  }>({
+    theme: 'dark',
+    currency: 'USD',
+    taxRate: 0.08,
+    storeName: 'OmniCommand HQ'
+  });
+
+  useEffect(() => {
+    if (settings) {
+      setFormState({
+        theme: settings.theme,
+        currency: settings.currency,
+        taxRate: settings.taxRate,
+        storeName: settings.storeName
+      });
+    }
+  }, [settings]);
+
+  const handleSave = async () => {
+    try {
+      await updateSettings(formState);
+      toast.success('Settings saved successfully');
+    } catch (e) {
+      console.error(e);
+      toast.error('Failed to save settings');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-[calc(100vh-64px-2rem)]">
       <div className="flex justify-between items-end mb-8 relative z-20 shrink-0">
@@ -11,8 +57,12 @@ export const Settings: React.FC = () => {
           <p className="font-body-md text-body-md text-on-surface-variant m-0 mt-1">Configure global parameters and security overrides.</p>
         </div>
         <div className="flex gap-4">
-          <button className="bg-primary hover:bg-primary-container text-on-primary px-6 py-2 rounded-md font-label-md transition-colors flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">save</span>
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            className="bg-primary hover:bg-primary-container text-on-primary px-6 py-2 rounded-md font-label-md transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <span className="material-symbols-outlined text-[18px]">save</span>}
             SAVE CHANGES
           </button>
         </div>
@@ -45,9 +95,22 @@ export const Settings: React.FC = () => {
             Billing Configuration
           </h3>
           <div className="space-y-6">
-            <PremiumInput label="BASE HOURLY RATE (₹)" defaultValue="150" type="number" />
-            <PremiumInput label="WEEKEND MULTIPLIER" defaultValue="1.2" type="number" step="0.1" />
-            <PremiumInput label="TAX RATE (%)" defaultValue="18" type="number" />
+            <PremiumInput 
+              label="STORE NAME" 
+              value={formState.storeName} 
+              onChange={(e: any) => setFormState(s => ({ ...s, storeName: e.target.value }))}
+            />
+            <PremiumInput 
+              label="CURRENCY" 
+              value={formState.currency} 
+              onChange={(e: any) => setFormState(s => ({ ...s, currency: e.target.value }))}
+            />
+            <PremiumInput 
+              label="TAX RATE (%)" 
+              type="number"
+              value={(formState.taxRate * 100).toString()} 
+              onChange={(e: any) => setFormState(s => ({ ...s, taxRate: Number(e.target.value) / 100 }))}
+            />
           </div>
         </MatteCard>
       </div>

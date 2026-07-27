@@ -16,16 +16,16 @@ export default {
         "primary-container": "#4d8eff",
         "surface-container-lowest": "rgba(11, 14, 21, 0)",
         "on-primary-fixed": "#001a42",
-        "surface-dim": "#10131a",
+        "surface-dim": "#0a0c10", /* Darkened slightly for more contrast */
         "outline-variant": "#424754",
         "tertiary-container": "#df7412",
         "primary-fixed": "#d8e2ff",
-        "surface-container-low": "rgba(25, 27, 35, 0.7)",
+        "surface-container-low": "rgba(20, 23, 30, 0.7)", /* Darkened slightly */
         "error-container": "#93000a",
         "surface-tint": "#adc6ff",
-        "surface-container": "#1d2027",
+        "surface-container": "#161922", /* Darkened slightly */
         "on-surface": "#e1e2ec",
-        "surface": "rgba(16, 19, 26, 0.8)",
+        "surface": "rgba(10, 12, 16, 0.85)", /* Darker, more premium base */
         "on-primary-container": "#00285d",
         "tertiary": "#ffb786",
         "on-secondary-container": "#b2b5be",
@@ -37,7 +37,7 @@ export default {
         "on-primary-fixed-variant": "#004395",
         "on-background": "#e1e2ec",
         "surface-bright": "#363941",
-        "background": "#10131a",
+        "background": "#05070a", /* Deeper background for luxury feel */
         "surface-variant": "#32353c",
         "secondary": "#c3c6d0",
         "surface-container-highest": "#32353c",
@@ -60,7 +60,9 @@ export default {
         "DEFAULT": "0.125rem",
         "lg": "0.25rem",
         "xl": "0.5rem",
-        "full": "0.75rem"
+        "2xl": "0.75rem",
+        "3xl": "1rem",
+        "full": "9999px"
       },
       "spacing": {
         "stack-sm": "0.5rem",
@@ -93,6 +95,24 @@ export default {
         "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
         "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
         "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+      },
+      "boxShadow": {
+        'premium-soft': '0 8px 30px rgba(0, 0, 0, 0.12)',
+        'premium-inner': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+        'glow-primary': '0 0 20px -5px theme("colors.primary")',
+        'glow-green': '0 0 20px -5px rgba(34, 197, 94, 0.5)',
+        'glow-red': '0 0 20px -5px rgba(239, 68, 68, 0.5)',
+        'glow-orange': '0 0 20px -5px rgba(249, 115, 22, 0.5)',
+      },
+      "animation": {
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      "keyframes": {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
       }
     }
   },

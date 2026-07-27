@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { TopNavBar } from './TopNavBar';
 import { SideNavBar } from './SideNavBar';
 import { CheckoutDrawer } from '../specific/CheckoutDrawer';
 import { POSModal } from '../specific/POSModal';
+import { CommandPalette } from '../common/CommandPalette';
 
 export const AppLayout: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +23,35 @@ export const AppLayout: React.FC = () => {
       return prev;
     });
   }, [setSearchParams]);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      if (e.shiftKey && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        setSearchParams(prev => {
+          prev.set('pos', 'GLOBAL');
+          return prev;
+        });
+      }
+      
+      if (e.shiftKey && e.key.toLowerCase() === 'c') {
+        e.preventDefault();
+        setSearchParams(prev => {
+          prev.set('checkout', 'GLOBAL');
+          return prev;
+        });
+      }
+
+      if (e.key === 'Escape') {
+        closeOverlays();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setSearchParams, closeOverlays]);
 
   return (
     <>
@@ -51,6 +82,15 @@ export const AppLayout: React.FC = () => {
         isOpen={isPosOpen} 
         stationId={posStation} 
         onClose={closeOverlays} 
+      />
+      
+      <CommandPalette />
+      <Toaster 
+        theme="dark" 
+        position="bottom-right" 
+        toastOptions={{
+          className: 'bg-surface-container-high border-outline-variant/10 text-on-surface glass-panel backdrop-blur-md shadow-premium-soft rounded-xl'
+        }} 
       />
     </>
   );

@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useBookings } from '../../hooks/queries/useBookings';
+
+import { BookingFormModal } from '../../components/specific/BookingFormModal';
 
 export const Bookings: React.FC = () => {
   const [, setSearchParams] = useSearchParams();
+  const { data: bookings, isLoading } = useBookings();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openCheckout = (id: string) => {
     setSearchParams({ checkout: id });
@@ -11,6 +16,8 @@ export const Bookings: React.FC = () => {
   const openPOS = (id: string) => {
     setSearchParams({ pos: id });
   };
+
+  const upcomingBookings = bookings?.filter(b => b.status !== 'CANCELLED') || [];
 
   return (
     <div className="flex flex-col gap-8 relative z-20">
@@ -23,9 +30,12 @@ export const Bookings: React.FC = () => {
         <div className="flex gap-3">
           <button className="px-4 py-2 bg-surface-container-high/80 backdrop-blur-md border border-outline-variant/30 rounded-lg font-label-md text-on-surface hover:bg-surface-bright transition-colors flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-            Today: Oct 24, 2023
+            Today: {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </button>
-          <button className="px-6 py-2 bg-primary/90 text-on-primary font-label-md rounded-lg hover:opacity-100 active:scale-95 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(173,198,255,0.4)]">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="px-6 py-2 bg-primary/90 text-on-primary font-label-md rounded-lg hover:opacity-100 active:scale-95 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(173,198,255,0.4)]"
+          >
             <span className="material-symbols-outlined text-[18px]">add</span>
             New Booking
           </button>
@@ -55,10 +65,10 @@ export const Bookings: React.FC = () => {
               
               {/* Time Headers */}
               <div className="h-10 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-[10px] text-on-surface-variant sticky left-0 z-20">STATION</div>
-              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">04:00</div>
-              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">05:00</div>
-              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">06:00</div>
-              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">07:00</div>
+              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">14:00</div>
+              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">15:00</div>
+              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">16:00</div>
+              <div className="h-10 border-b border-l border-outline-variant/20 bg-surface-container-low/50 flex items-center px-2 font-mono-data text-[10px] text-on-surface-variant">17:00</div>
               
               {/* PC-01 */}
               <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PC-01</div>
@@ -70,19 +80,19 @@ export const Bookings: React.FC = () => {
                 }}
               >
                 <div 
-                  className="absolute top-2 left-0 w-[50%] h-12 rounded-r-lg p-2 overflow-hidden cursor-pointer hover:bg-white/10 transition-colors border-l-4 border-[#3b82f6] shadow-[-2px_0_10px_rgba(59,130,246,0.5)] bg-white/5 backdrop-blur-md"
+                  className="absolute top-2 left-[25%] w-[50%] h-12 rounded-r-lg p-2 overflow-hidden cursor-pointer hover:bg-white/10 transition-colors border-l-4 border-[#3b82f6] shadow-[-2px_0_10px_rgba(59,130,246,0.5)] bg-white/5 backdrop-blur-md"
                   onClick={() => openCheckout('PC-01')}
                 >
                   <div className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></span>
-                    <p className="font-label-md text-on-surface truncate m-0">Ishaan Sharma</p>
+                    <p className="font-label-md text-on-surface truncate m-0">Alex Mercer</p>
                   </div>
-                  <p className="font-mono-data text-[10px] text-on-surface-variant m-0 mt-0.5">04:00 - 06:00 • ₹350</p>
+                  <p className="font-mono-data text-[10px] text-on-surface-variant m-0 mt-0.5">15:00 - 17:00 • CONFIRMED</p>
                 </div>
               </div>
 
-              {/* PC-02 */}
-              <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PC-02</div>
+              {/* PS5-01 (st-05) */}
+              <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PS5-01</div>
               <div 
                 className="h-16 border-b border-outline-variant/20 relative col-span-4" 
                 style={{
@@ -91,38 +101,19 @@ export const Bookings: React.FC = () => {
                 }}
               >
                 <div 
-                  className="absolute top-2 left-[25%] w-[50%] h-12 rounded-r-lg p-2 overflow-hidden cursor-pointer hover:bg-white/10 transition-colors border-l-4 border-[#10b981] shadow-[-2px_0_10px_rgba(16,185,129,0.5)] bg-white/5 backdrop-blur-md"
-                  onClick={() => openPOS('PC-02')}
+                  className="absolute top-2 left-0 w-[50%] h-12 rounded-r-lg p-2 overflow-hidden cursor-pointer hover:bg-white/10 transition-colors border-l-4 border-[#10b981] shadow-[-2px_0_10px_rgba(16,185,129,0.5)] bg-white/5 backdrop-blur-md"
+                  onClick={() => openPOS('PS5-01')}
                 >
                   <div className="flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]"></span>
-                    <p className="font-label-md text-on-surface truncate m-0">Aditi Rao</p>
+                    <p className="font-label-md text-on-surface truncate m-0">Sarah Connor</p>
                   </div>
-                  <p className="font-mono-data text-[10px] text-on-surface-variant m-0 mt-0.5">05:00 - 07:00 • ₹500</p>
+                  <p className="font-mono-data text-[10px] text-on-surface-variant m-0 mt-0.5">14:00 - 16:00 • PENDING</p>
                 </div>
               </div>
 
               {/* PC-03 */}
               <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PC-03</div>
-              <div className="h-16 border-b border-outline-variant/20 relative col-span-4" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '25% 100%' }}></div>
-
-              {/* PC-04 */}
-              <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PC-04</div>
-              <div className="h-16 border-b border-outline-variant/20 relative col-span-4" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '25% 100%' }}>
-                <div 
-                  className="absolute top-2 left-[50%] w-[25%] h-12 rounded-r-lg p-2 overflow-hidden cursor-pointer hover:bg-white/10 transition-colors border-l-4 border-[#3b82f6] shadow-[-2px_0_10px_rgba(59,130,246,0.5)] bg-white/5 backdrop-blur-md"
-                  onClick={() => openCheckout('PC-04')}
-                >
-                  <div className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></span>
-                    <p className="font-label-md text-on-surface truncate m-0">Sneha Gupta</p>
-                  </div>
-                  <p className="font-mono-data text-[10px] text-on-surface-variant m-0 mt-0.5">06:00 - 07:00 • ₹150</p>
-                </div>
-              </div>
-
-              {/* PC-05 */}
-              <div className="h-16 border-b border-outline-variant/20 bg-surface-container-low/90 backdrop-blur-md flex items-center justify-center font-mono-data text-body-sm text-on-surface sticky left-0 z-10 border-r">PC-05</div>
               <div className="h-16 border-b border-outline-variant/20 relative col-span-4" style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '25% 100%' }}></div>
 
             </div>
@@ -135,7 +126,7 @@ export const Bookings: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-surface-container/80 backdrop-blur-md p-4 rounded-xl border border-outline-variant/20 shadow-md">
               <p className="font-label-md text-on-surface-variant uppercase m-0">Total Bookings</p>
-              <h4 className="font-display-lg text-headline-lg mt-1 text-primary m-0">24</h4>
+              <h4 className="font-display-lg text-headline-lg mt-1 text-primary m-0">{upcomingBookings.length}</h4>
               <div className="mt-2 flex items-center gap-1 text-[#10b981]">
                 <span className="material-symbols-outlined text-[14px]">trending_up</span>
                 <span className="font-label-md text-[10px]">+12% vs last week</span>
@@ -144,7 +135,7 @@ export const Bookings: React.FC = () => {
             
             <div className="bg-surface-container/80 backdrop-blur-md p-4 rounded-xl border border-outline-variant/20 shadow-md">
               <p className="font-label-md text-on-surface-variant uppercase m-0">Projected Rev</p>
-              <h4 className="font-display-lg text-headline-lg mt-1 text-primary m-0">₹8.4k</h4>
+              <h4 className="font-display-lg text-headline-lg mt-1 text-primary m-0">$45.00</h4>
               <div className="mt-2 flex items-center gap-1 text-[#10b981]">
                 <span className="material-symbols-outlined text-[14px]">check_circle</span>
                 <span className="font-label-md text-[10px]">Goal on track</span>
@@ -160,40 +151,50 @@ export const Bookings: React.FC = () => {
             </div>
             <div className="p-2 flex flex-col gap-1">
               
-              <div className="p-3 bg-surface-container-highest/50 rounded-lg flex items-center gap-4 group cursor-pointer hover:bg-surface-bright/80 transition-all border border-transparent hover:border-outline-variant/30">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-surface flex items-center justify-center font-bold text-on-surface border border-outline-variant/20">RK</div>
-                <div className="flex-grow overflow-hidden">
-                  <div className="flex items-center justify-between">
-                    <p className="font-body-md text-on-surface truncate m-0">Rohan Kulkarni</p>
-                    <span className="px-2 py-0.5 rounded-full bg-[#10b981]/10 text-[#10b981] text-[9px] font-bold border border-[#10b981]/20">WHATSAPP</span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-mono-data text-[12px] text-on-surface-variant">14:00 - 17:00</span>
-                    <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
-                    <span className="font-mono-data text-[12px] text-primary">₹ 450</span>
-                  </div>
+              {isLoading ? (
+                <div className="flex justify-center p-4">
+                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                 </div>
-              </div>
-
-              <div className="p-3 hover:bg-surface-container/50 rounded-lg flex items-center gap-4 group cursor-pointer transition-all border border-transparent hover:border-outline-variant/30">
-                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-surface flex items-center justify-center font-bold text-on-surface border border-outline-variant/20">SM</div>
-                <div className="flex-grow overflow-hidden">
-                  <div className="flex items-center justify-between">
-                    <p className="font-body-md text-on-surface truncate m-0">Sanya Malhotra</p>
-                    <span className="px-2 py-0.5 rounded-full bg-[#3b82f6]/10 text-[#3b82f6] text-[9px] font-bold border border-[#3b82f6]/20">WEBSITE</span>
+              ) : upcomingBookings.map(booking => {
+                const isWhatsapp = booking.source === 'WHATSAPP';
+                const sourceColor = isWhatsapp ? '#10b981' : '#3b82f6';
+                
+                const start = new Date(booking.startTime);
+                const end = new Date(booking.endTime);
+                
+                return (
+                  <div key={booking.id} className="p-3 bg-surface-container-highest/50 rounded-lg flex items-center gap-4 group cursor-pointer hover:bg-surface-bright/80 transition-all border border-transparent hover:border-outline-variant/30">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-surface flex items-center justify-center font-bold text-on-surface border border-outline-variant/20">
+                      {booking.customerName.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-grow overflow-hidden">
+                      <div className="flex items-center justify-between">
+                        <p className="font-body-md text-on-surface truncate m-0">{booking.customerName}</p>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border`} style={{ color: sourceColor, backgroundColor: `${sourceColor}20`, borderColor: `${sourceColor}40` }}>
+                          {booking.source}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="font-mono-data text-[12px] text-on-surface-variant">
+                          {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
+                        <span className="font-mono-data text-[12px] text-primary">{booking.status}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="font-mono-data text-[12px] text-on-surface-variant">15:30 - 19:30</span>
-                    <span className="w-1 h-1 rounded-full bg-outline-variant"></span>
-                    <span className="font-mono-data text-[12px] text-primary">₹ 600</span>
-                  </div>
-                </div>
-              </div>
+                );
+              })}
 
             </div>
           </div>
         </div>
       </div>
+
+      <BookingFormModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
