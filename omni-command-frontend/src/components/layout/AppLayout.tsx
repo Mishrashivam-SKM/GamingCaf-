@@ -1,9 +1,27 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import { TopNavBar } from './TopNavBar';
 import { SideNavBar } from './SideNavBar';
+import { CheckoutDrawer } from '../specific/CheckoutDrawer';
+import { POSModal } from '../specific/POSModal';
 
 export const AppLayout: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const isCheckoutOpen = searchParams.has('checkout');
+  const checkoutStation = searchParams.get('checkout') || undefined;
+  
+  const isPosOpen = searchParams.has('pos');
+  const posStation = searchParams.get('pos') || undefined;
+
+  const closeOverlays = useCallback(() => {
+    setSearchParams(prev => {
+      prev.delete('checkout');
+      prev.delete('pos');
+      return prev;
+    });
+  }, [setSearchParams]);
+
   return (
     <>
       <div className="grid-bg">
@@ -23,6 +41,17 @@ export const AppLayout: React.FC = () => {
           <Outlet />
         </div>
       </main>
+
+      <CheckoutDrawer 
+        isOpen={isCheckoutOpen} 
+        stationId={checkoutStation} 
+        onClose={closeOverlays} 
+      />
+      <POSModal 
+        isOpen={isPosOpen} 
+        stationId={posStation} 
+        onClose={closeOverlays} 
+      />
     </>
   );
 };
