@@ -6,6 +6,7 @@ import { SideNavBar } from './SideNavBar';
 import { CheckoutDrawer } from '../specific/CheckoutDrawer';
 import { POSModal } from '../specific/POSModal';
 import { CommandPalette } from '../common/CommandPalette';
+import { CustomerFormModal } from '../specific/CustomerFormModal';
 
 export const AppLayout: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,13 +14,17 @@ export const AppLayout: React.FC = () => {
   const isCheckoutOpen = searchParams.has('checkout');
   const checkoutStation = searchParams.get('checkout') || undefined;
   
-  const isPosOpen = searchParams.has('pos');
+  const isPosOpen = searchParams.has('pos') || searchParams.has('recharge');
   const posStation = searchParams.get('pos') || undefined;
+
+  const isNewMemberOpen = searchParams.has('new_member');
 
   const closeOverlays = useCallback(() => {
     setSearchParams(prev => {
       prev.delete('checkout');
       prev.delete('pos');
+      prev.delete('recharge');
+      prev.delete('new_member');
       return prev;
     });
   }, [setSearchParams]);
@@ -82,6 +87,10 @@ export const AppLayout: React.FC = () => {
         isOpen={isPosOpen} 
         stationId={posStation} 
         onClose={closeOverlays} 
+      />
+      <CustomerFormModal
+        isOpen={isNewMemberOpen}
+        onClose={closeOverlays}
       />
       
       <CommandPalette />

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PremiumInput } from '../../components/common/PremiumInput';
+import { useAuth } from '../../contexts/AuthContext';
 
 export const Authentication: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [authMode, setAuthMode] = useState<'admin' | 'staff'>('admin');
   const [loading, setLoading] = useState(false);
 
@@ -12,6 +14,7 @@ export const Authentication: React.FC = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      login(authMode === 'admin' ? 'ADMIN' : 'OPERATOR');
       navigate('/');
     }, 1500);
   };

@@ -1,9 +1,32 @@
 import React from 'react';
 import { MatteCard } from '../../components/common/MatteCard';
+import { 
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
+} from 'recharts';
+
+const revenueData = [
+  { name: 'Mon', current: 4000, previous: 2400 },
+  { name: 'Tue', current: 3000, previous: 1398 },
+  { name: 'Wed', current: 2000, previous: 9800 },
+  { name: 'Thu', current: 2780, previous: 3908 },
+  { name: 'Fri', current: 1890, previous: 4800 },
+  { name: 'Sat', current: 2390, previous: 3800 },
+  { name: 'Sun', current: 3490, previous: 4300 },
+];
+
+const popularGamesData = [
+  { name: 'Valorant', value: 400 },
+  { name: 'CS2', value: 300 },
+  { name: 'League of Legends', value: 300 },
+  { name: 'Apex Legends', value: 200 },
+];
+
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
 
 export const Analytics: React.FC = () => {
   return (
-    <div className="flex flex-col h-[calc(100vh-64px-2rem)]">
+    <div className="flex flex-col h-[calc(100vh-64px-2rem)] overflow-y-auto custom-scrollbar">
       <div className="flex justify-between items-end mb-8 relative z-20 shrink-0">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface m-0">Executive Analytics</h1>
@@ -35,23 +58,55 @@ export const Analytics: React.FC = () => {
         </MatteCard>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-20">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-20 min-h-[400px]">
         <MatteCard className="flex flex-col">
-          <h3 className="font-headline-sm text-on-surface mb-6 m-0">Revenue Trend</h3>
-          <div className="flex-1 flex items-center justify-center border border-outline-variant/10 bg-background/50 rounded-lg min-h-[200px]">
-            <p className="text-on-surface-variant font-body-sm italic m-0 flex items-center gap-2">
-              <span className="material-symbols-outlined">bar_chart</span>
-              Chart Placeholder (Recharts)
-            </p>
+          <h3 className="font-headline-sm text-on-surface mb-6 m-0">Revenue Trend (7 Days)</h3>
+          <div className="flex-1 w-full min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={revenueData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
+                <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} />
+                <YAxis stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 12}} axisLine={false} tickLine={false} />
+                <RechartsTooltip 
+                  contentStyle={{ backgroundColor: 'rgba(20,20,20,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  itemStyle={{ color: '#fff' }}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="current" name="This Week" stroke="#3b82f6" strokeWidth={3} dot={{r: 4}} activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="previous" name="Last Week" stroke="#6b7280" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </MatteCard>
         <MatteCard className="flex flex-col">
           <h3 className="font-headline-sm text-on-surface mb-6 m-0">Popular Games</h3>
-          <div className="flex-1 flex items-center justify-center border border-outline-variant/10 bg-background/50 rounded-lg min-h-[200px]">
-            <p className="text-on-surface-variant font-body-sm italic m-0 flex items-center gap-2">
-              <span className="material-symbols-outlined">pie_chart</span>
-              Chart Placeholder (Recharts)
-            </p>
+          <div className="flex-1 w-full min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={popularGamesData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={5}
+                  dataKey="value"
+                  stroke="none"
+                >
+                  {popularGamesData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <RechartsTooltip 
+                  contentStyle={{ backgroundColor: 'rgba(20,20,20,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  itemStyle={{ color: '#fff' }}
+                />
+                <Legend verticalAlign="bottom" height={36}/>
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </MatteCard>
       </div>

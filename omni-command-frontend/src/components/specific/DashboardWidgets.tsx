@@ -27,15 +27,24 @@ export const DashboardWidgets: React.FC = () => {
             <ShoppingCart className="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" />
             <span className="font-label-md text-[13px]">POS</span>
           </button>
-          <button className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm">
+          <button 
+            onClick={() => setSearchParams(prev => { prev.set('new_member', 'true'); return prev; })}
+            className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm"
+          >
             <UserPlus className="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" />
             <span className="font-label-md text-[13px]">New Member</span>
           </button>
-          <button className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm">
+          <button 
+            onClick={() => setSearchParams(prev => { prev.set('checkout', 'GLOBAL'); return prev; })}
+            className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm"
+          >
             <Clock className="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" />
             <span className="font-label-md text-[13px]">Add Time</span>
           </button>
-          <button className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm">
+          <button 
+            onClick={() => setSearchParams(prev => { prev.set('recharge', 'true'); return prev; })}
+            className="flex flex-col items-center justify-center gap-2 bg-surface-container hover:bg-primary/10 border border-white/5 hover:border-primary/30 p-4 rounded-xl transition-all text-on-surface hover:text-primary group shadow-sm"
+          >
             <CreditCard className="w-6 h-6 text-on-surface-variant group-hover:text-primary transition-colors" />
             <span className="font-label-md text-[13px]">Recharge</span>
           </button>

@@ -2,18 +2,20 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { LayoutDashboard, Calendar, Users, Package, Activity, Settings, LogOut, TerminalSquare } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/bookings', label: 'Bookings', icon: Calendar },
   { path: '/customers', label: 'Users', icon: Users },
   { path: '/inventory', label: 'Inventory', icon: Package },
-  { path: '/analytics', label: 'Reports', icon: Activity },
-  { path: '/settings', label: 'Settings', icon: Settings },
+  { path: '/analytics', label: 'Reports', icon: Activity, requireAdmin: true },
+  { path: '/settings', label: 'Settings', icon: Settings, requireAdmin: true },
 ];
 
 export const SideNavBar: React.FC = () => {
   const location = useLocation();
+  const { role, logout } = useAuth();
 
   return (
     <aside aria-label="Sidebar Navigation" className="fixed left-0 top-0 h-full w-[240px] z-40 transition-all duration-300 bg-surface-container-low/60 backdrop-blur-2xl border-r border-white/5 flex flex-col pt-[64px] pb-4 shadow-xl">
@@ -35,7 +37,7 @@ export const SideNavBar: React.FC = () => {
       </div>
       
       <nav aria-label="Main Navigation" className="flex-1 mt-6 overflow-y-auto px-3 space-y-2 relative z-10 scrollbar-hide">
-        {navItems.map((item) => {
+        {navItems.filter(item => !item.requireAdmin || role === 'ADMIN').map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
           
@@ -76,6 +78,7 @@ export const SideNavBar: React.FC = () => {
       <div className="px-3 pt-4 border-t border-white/5 relative z-10">
         <NavLink
           to="/auth"
+          onClick={() => logout()}
           aria-label="Logout from system"
           className="relative flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-error transition-all duration-200 ease-out rounded-xl group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 focus-visible:ring-offset-surface-container"
         >

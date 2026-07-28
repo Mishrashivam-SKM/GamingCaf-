@@ -135,13 +135,7 @@ export const Inventory: React.FC = () => {
       </div>
 
       <div className="flex-1 relative z-20 overflow-hidden h-full pb-8">
-        {isLoading ? (
-          <div className="w-full h-full flex items-center justify-center">
-             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          <DataGrid columns={columns} data={filteredProducts} />
-        )}
+        <DataGrid columns={columns} data={filteredProducts} isLoading={isLoading} />
       </div>
 
       <ProductFormModal 
