@@ -96,7 +96,7 @@ export const Analytics: React.FC = () => {
                   dataKey="value"
                   stroke="none"
                 >
-                  {popularGamesData.map((entry, index) => (
+                  {popularGamesData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
